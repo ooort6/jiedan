@@ -1,514 +1,564 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>AREA X - 个人情报</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            background-color: #f8f5e4;
-            color: #333;
-        }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        background-color: #f8f5e4;
+        color: #333;
+      }
 
-        .container {
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
+      .container {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
 
-        /* 顶部状态栏 */
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 15px;
-            font-weight: bold;
-        }
+      /* 顶部状态栏 */
+      .status-bar {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 15px;
+        font-weight: bold;
+      }
 
-        .status-bar .time {
-            font-size: 16px;
-        }
+      .status-bar .time {
+        font-size: 16px;
+      }
 
-        .status-bar .icons {
-            display: flex;
-            gap: 5px;
-        }
+      .status-bar .icons {
+        display: flex;
+        gap: 5px;
+      }
 
-        .status-bar .icons span {
-            font-size: 16px;
-        }
+      .status-bar .icons span {
+        font-size: 16px;
+      }
 
-        /* 消息图标 */
-        .message-icon {
-            position: absolute;
-            top: 40px;
-            right: 20px;
-            font-size: 24px;
-        }
+      /* 消息图标 */
+      .message-icon {
+        position: absolute;
+        top: 40px;
+        right: 20px;
+        font-size: 24px;
+      }
 
-        .message-icon img {
-            width: 24px;
-            height: 24px;
-        }
+      .message-icon img {
+        width: 24px;
+        height: 24px;
+      }
 
-        .message-icon .badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 16px;
-            height: 16px;
-            background-color: #ff4d4f;
-            border-radius: 50%;
-            font-size: 10px;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+      .message-icon .badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 16px;
+        height: 16px;
+        background-color: #ff4d4f;
+        border-radius: 50%;
+        font-size: 10px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
 
-        /* 个人资料卡片 */
-        .profile-card {
-            display: flex;
-            align-items: center;
-            padding: 20px;
-            gap: 15px;
+      /* 个人资料卡片 */
+      .profile-card {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        gap: 15px;
+      }
+
+      .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .profile-info {
+        flex: 1;
+      }
+
+      .profile-name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 5px;
+      }
+
+      .profile-name h2 {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .level-tag {
+        background-color: #ffc107;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+
+      .level-tag img {
+        width: 14px;
+        height: 14px;
+      }
+
+      .user-id {
+        color: #999;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .copy-icon {
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+      }
+
+      /* 功能卡片 */
+      .function-card {
+        background-color: white;
+        border-radius: 15px;
+        margin: 10px 15px;
+        padding: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      /* 账户功能区 */
+      .account-functions {
+        display: flex;
+        border-radius: 15px;
+        overflow: hidden;
+      }
+
+      .account-function {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        gap: 10px;
+        background-color: white;
+      }
+
+      .account-function:first-child {
+        border-right: 1px solid #f0f0f0;
+      }
+
+      .account-icon {
+        width: 30px;
+        height: 30px;
+      }
+
+      .account-name {
+        font-size: 14px;
+      }
+
+      /* SNS连接部分 */
+      .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 20px;
+      }
+
+      .sns-list {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+      }
+
+      .sns-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .sns-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+      }
+
+      .sns-connect {
+        background-color: #f0f0f0;
+        border-radius: 15px;
+        padding: 5px 15px;
+        font-size: 12px;
+      }
+
+      /* 设置列表 */
+      .settings-list {
+        margin-top: 10px;
+      }
+
+      .settings-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 5px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .settings-item:last-child {
+        border-bottom: none;
+      }
+
+      .settings-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .settings-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .settings-name {
+        font-size: 16px;
+      }
+
+      .arrow-icon {
+        color: #ccc;
+        font-size: 20px;
+      }
+
+      /* 底部导航 */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: white;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .nav-icon {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 5px;
+      }
+
+      .nav-item.active {
+        color: #333;
+      }
+
+      /* 底部浏览器控制栏 */
+      .browser-controls {
+        position: fixed;
+        bottom: 50px;
+        left: 0;
+        right: 0;
+        background-color: #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        color: white;
+      }
+
+      .browser-left,
+      .browser-right {
+        font-size: 24px;
+      }
+
+      .browser-bottom {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: white;
+        display: flex;
+        justify-content: space-around;
+        padding: 15px 0;
+        border-top: 1px solid #eee;
+      }
+
+      .browser-nav {
+        font-size: 24px;
+        color: #333;
+      }
+
+      /* 黄色背景波浪 */
+      .yellow-wave {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 60%;
+        height: 250px;
+        background-color: #ffeaa7;
+        border-radius: 0 0 0 100%;
+        z-index: -1;
+      }
+
+      /* 响应式调整 */
+      @media (max-width: 375px) {
+        .profile-name h2 {
+          font-size: 18px;
         }
 
         .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-info {
-            flex: 1;
-        }
-
-        .profile-name {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 5px;
-        }
-
-        .profile-name h2 {
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .level-tag {
-            background-color: #ffc107;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-
-        .level-tag img {
-            width: 14px;
-            height: 14px;
-        }
-
-        .user-id {
-            color: #999;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .copy-icon {
-            cursor: pointer;
-            width: 16px;
-            height: 16px;
-        }
-
-        /* 功能卡片 */
-        .function-card {
-            background-color: white;
-            border-radius: 15px;
-            margin: 10px 15px;
-            padding: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        /* 账户功能区 */
-        .account-functions {
-            display: flex;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .account-function {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            gap: 10px;
-            background-color: white;
-        }
-
-        .account-function:first-child {
-            border-right: 1px solid #f0f0f0;
-        }
-
-        .account-icon {
-            width: 30px;
-            height: 30px;
-        }
-
-        .account-name {
-            font-size: 14px;
-        }
-
-        /* SNS连接部分 */
-        .section-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-
-        .sns-list {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .sns-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
+          width: 70px;
+          height: 70px;
         }
 
         .sns-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+          width: 40px;
+          height: 40px;
         }
-
-        .sns-connect {
-            background-color: #f0f0f0;
-            border-radius: 15px;
-            padding: 5px 15px;
-            font-size: 12px;
-        }
-
-        /* 设置列表 */
-        .settings-list {
-            margin-top: 10px;
-        }
-
-        .settings-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 5px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .settings-item:last-child {
-            border-bottom: none;
-        }
-
-        .settings-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .settings-icon {
-            width: 24px;
-            height: 24px;
-        }
-
-        .settings-name {
-            font-size: 16px;
-        }
-
-        .arrow-icon {
-            color: #ccc;
-            font-size: 20px;
-        }
-
-        /* 底部导航 */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .nav-icon {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 5px;
-        }
-
-        .nav-item.active {
-            color: #333;
-        }
-
-        /* 底部浏览器控制栏 */
-        .browser-controls {
-            position: fixed;
-            bottom: 50px;
-            left: 0;
-            right: 0;
-            background-color: #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            color: white;
-        }
-
-        .browser-left, .browser-right {
-            font-size: 24px;
-        }
-
-        .browser-bottom {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
-            border-top: 1px solid #eee;
-        }
-
-        .browser-nav {
-            font-size: 24px;
-            color: #333;
-        }
-
-        /* 黄色背景波浪 */
-        .yellow-wave {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 60%;
-            height: 250px;
-            background-color: #ffeaa7;
-            border-radius: 0 0 0 100%;
-            z-index: -1;
-        }
-
-        /* 响应式调整 */
-        @media (max-width: 375px) {
-            .profile-name h2 {
-                font-size: 18px;
-            }
-            
-            .avatar {
-                width: 70px;
-                height: 70px;
-            }
-            
-            .sns-icon {
-                width: 40px;
-                height: 40px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <!-- 黄色背景波浪 -->
-        <div class="yellow-wave"></div>
-        
-        <!-- 顶部状态栏 -->
-        <div class="status-bar">
-            <div class="time">9:41</div>
-            <div class="icons">
-                <span>●●●</span>
-                <span>📶</span>
-                <span>🔋</span>
-            </div>
+      <!-- 黄色背景波浪 -->
+      <div class="yellow-wave"></div>
+
+      <!-- 消息图标 -->
+      <div class="message-icon">
+        <img src="../assest/p1/Message - Iconly Pro.png" alt="消息" />
+        <div class="badge">1</div>
+      </div>
+
+      <!-- 个人资料卡片 -->
+      <div class="profile-card">
+        <div class="avatar">
+          <img
+            src="../assest/p7/98c5ecc91ee82ad3d9ca76706a7caa8b.png"
+            alt="用户头像"
+          />
         </div>
-        
-        <!-- 消息图标 -->
-        <div class="message-icon">
-            <img src="../assest/p1/Message - Iconly Pro.png" alt="消息">
-            <div class="badge">1</div>
+        <div class="profile-info">
+          <div class="profile-name">
+            <h2>尹原 悠真</h2>
+            <div class="level-tag">
+              <span>Lv.2</span>
+            </div>
+          </div>
+          <div class="user-id">
+            ID：G28I456BZ
+            <img src="../assest/p7/Frame 3.png" alt="复制" class="copy-icon" />
+          </div>
         </div>
-        
-        <!-- 个人资料卡片 -->
-        <div class="profile-card">
-            <div class="avatar">
-                <img src="../assest/p7/98c5ecc91ee82ad3d9ca76706a7caa8b.png" alt="用户头像">
-            </div>
-            <div class="profile-info">
-                <div class="profile-name">
-                    <h2>尹原 悠真</h2>
-                    <div class="level-tag">
-                        <span>Lv.2</span>
-                    </div>
-                </div>
-                <div class="user-id">
-                    ID：G28I456BZ
-                    <img src="../assest/p7/Frame 3.png" alt="复制" class="copy-icon">
-                </div>
-            </div>
+      </div>
+
+      <!-- 账户功能卡片 -->
+      <div class="function-card">
+        <div class="account-functions">
+          <div class="account-function">
+            <img
+              src="../assest/p7/切换 (1) 1.png"
+              alt="账户切换"
+              class="account-icon"
+            />
+            <div class="account-name">アカウント切替</div>
+          </div>
+          <div class="account-function">
+            <img
+              src="../assest/p7/Frame 13.png"
+              alt="账户恢复"
+              class="account-icon"
+            />
+            <div class="account-name">アカウント復旧</div>
+          </div>
         </div>
-        
-        <!-- 账户功能卡片 -->
-        <div class="function-card">
-            <div class="account-functions">
-                <div class="account-function">
-                    <img src="../assest/p7/切换 (1) 1.png" alt="账户切换" class="account-icon">
-                    <div class="account-name">アカウント切替</div>
-                </div>
-                <div class="account-function">
-                    <img src="../assest/p7/Frame 13.png" alt="账户恢复" class="account-icon">
-                    <div class="account-name">アカウント復旧</div>
-                </div>
-            </div>
+      </div>
+
+      <!-- SNS连接部分 -->
+      <div class="function-card">
+        <div class="section-title">SNS連携</div>
+        <div class="sns-list">
+          <div class="sns-item">
+            <img src="../assest/p7/line 1.png" alt="LINE" class="sns-icon" />
+            <div class="sns-connect">連携</div>
+          </div>
+          <div class="sns-item">
+            <img
+              src="../assest/p7/google 1.png"
+              alt="Google"
+              class="sns-icon"
+            />
+            <div class="sns-connect">連携</div>
+          </div>
+          <div class="sns-item">
+            <img
+              src="../assest/p7/twitter 1.png"
+              alt="Twitter"
+              class="sns-icon"
+            />
+            <div class="sns-connect">連携</div>
+          </div>
+          <div class="sns-item">
+            <img
+              src="../assest/p7/facebook 1.png"
+              alt="Facebook"
+              class="sns-icon"
+            />
+            <div class="sns-connect">連携</div>
+          </div>
+          <div class="sns-item">
+            <img src="../assest/p7/apple 1.png" alt="Apple" class="sns-icon" />
+            <div class="sns-connect">連携</div>
+          </div>
         </div>
-        
-        <!-- SNS连接部分 -->
-        <div class="function-card">
-            <div class="section-title">SNS連携</div>
-            <div class="sns-list">
-                <div class="sns-item">
-                    <img src="../assest/p7/line 1.png" alt="LINE" class="sns-icon">
-                    <div class="sns-connect">連携</div>
-                </div>
-                <div class="sns-item">
-                    <img src="../assest/p7/google 1.png" alt="Google" class="sns-icon">
-                    <div class="sns-connect">連携</div>
-                </div>
-                <div class="sns-item">
-                    <img src="../assest/p7/twitter 1.png" alt="Twitter" class="sns-icon">
-                    <div class="sns-connect">連携</div>
-                </div>
-                <div class="sns-item">
-                    <img src="../assest/p7/facebook 1.png" alt="Facebook" class="sns-icon">
-                    <div class="sns-connect">連携</div>
-                </div>
-                <div class="sns-item">
-                    <img src="../assest/p7/apple 1.png" alt="Apple" class="sns-icon">
-                    <div class="sns-connect">連携</div>
-                </div>
+      </div>
+
+      <!-- 设置和信息部分 -->
+      <div class="function-card">
+        <div class="section-title">設定＆情報</div>
+        <div class="settings-list">
+          <div class="settings-item">
+            <div class="settings-left">
+              <img
+                src="../assest/p7/语言 1.png"
+                alt="语言"
+                class="settings-icon"
+              />
+              <div class="settings-name">言語</div>
             </div>
+            <div class="arrow-icon">›</div>
+          </div>
+          <div class="settings-item">
+            <div class="settings-left">
+              <img
+                src="../assest/p7/资金结算 1.png"
+                alt="资金结算"
+                class="settings-icon"
+              />
+              <div class="settings-name">資金決済法に基づく表示</div>
+            </div>
+            <div class="arrow-icon">›</div>
+          </div>
+          <div class="settings-item">
+            <div class="settings-left">
+              <img
+                src="../assest/p7/标记 1.png"
+                alt="特定商取引"
+                class="settings-icon"
+              />
+              <div class="settings-name">特定商取引法の表記</div>
+            </div>
+            <div class="arrow-icon">›</div>
+          </div>
+          <div class="settings-item">
+            <div class="settings-left">
+              <img
+                src="../assest/p7/列表 1.png"
+                alt="利用规约"
+                class="settings-icon"
+              />
+              <div class="settings-name">利用規約</div>
+            </div>
+            <div class="arrow-icon">›</div>
+          </div>
+          <div class="settings-item">
+            <div class="settings-left">
+              <img
+                src="../assest/p7/安全 1.png"
+                alt="个人信息保护"
+                class="settings-icon"
+              />
+              <div class="settings-name">個人情報保護方針</div>
+            </div>
+            <div class="arrow-icon">›</div>
+          </div>
         </div>
-        
-        <!-- 设置和信息部分 -->
-        <div class="function-card">
-            <div class="section-title">設定＆情報</div>
-            <div class="settings-list">
-                <div class="settings-item">
-                    <div class="settings-left">
-                        <img src="../assest/p7/语言 1.png" alt="语言" class="settings-icon">
-                        <div class="settings-name">言語</div>
-                    </div>
-                    <div class="arrow-icon">›</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-left">
-                        <img src="../assest/p7/资金结算 1.png" alt="资金结算" class="settings-icon">
-                        <div class="settings-name">資金決済法に基づく表示</div>
-                    </div>
-                    <div class="arrow-icon">›</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-left">
-                        <img src="../assest/p7/标记 1.png" alt="特定商取引" class="settings-icon">
-                        <div class="settings-name">特定商取引法の表記</div>
-                    </div>
-                    <div class="arrow-icon">›</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-left">
-                        <img src="../assest/p7/列表 1.png" alt="利用规约" class="settings-icon">
-                        <div class="settings-name">利用規約</div>
-                    </div>
-                    <div class="arrow-icon">›</div>
-                </div>
-                <div class="settings-item">
-                    <div class="settings-left">
-                        <img src="../assest/p7/安全 1.png" alt="个人信息保护" class="settings-icon">
-                        <div class="settings-name">個人情報保護方針</div>
-                    </div>
-                    <div class="arrow-icon">›</div>
-                </div>
-            </div>
+      </div>
+
+      <!-- 底部导航 -->
+      <div class="bottom-nav">
+        <div class="nav-item">
+          <img src="../assest/p7/Group 39.png" alt="推荐" class="nav-icon" />
+          <div>おすすめ</div>
         </div>
-        
-        <!-- 底部导航 -->
-        <div class="bottom-nav">
-            <div class="nav-item">
-                <img src="../assest/p7/Group 39.png" alt="推荐" class="nav-icon">
-                <div>おすすめ</div>
-            </div>
-            <div class="nav-item">
-                <img src="../assest/p7/Frame 13.png" alt="事前登录" class="nav-icon">
-                <div>事前登録</div>
-            </div>
-            <div class="nav-item">
-                <img src="../assest/p7/Group 39.png" alt="排行榜" class="nav-icon">
-                <div>ランキング</div>
-            </div>
-            <div class="nav-item active">
-                <img src="../assest/p7/Vector.png" alt="个人信息" class="nav-icon">
-                <div>個人情報</div>
-            </div>
+        <div class="nav-item">
+          <img
+            src="../assest/p7/Frame 13.png"
+            alt="事前登录"
+            class="nav-icon"
+          />
+          <div>事前登録</div>
         </div>
+        <div class="nav-item">
+          <img src="../assest/p7/Group 39.png" alt="排行榜" class="nav-icon" />
+          <div>ランキング</div>
+        </div>
+        <div class="nav-item active">
+          <img src="../assest/p7/Vector.png" alt="个人信息" class="nav-icon" />
+          <div>個人情報</div>
+        </div>
+      </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // 复制ID功能
-            const copyIcon = document.querySelector('.copy-icon');
-            const userId = document.querySelector('.user-id').textContent.trim().replace('ID：', '').replace('📋', '').trim();
-            
-            copyIcon.addEventListener('click', function() {
-                navigator.clipboard.writeText(userId).then(function() {
-                    alert('ID已复制到剪贴板: ' + userId);
-                }).catch(function(err) {
-                    console.error('无法复制ID: ', err);
-                });
+      document.addEventListener("DOMContentLoaded", function () {
+        // 复制ID功能
+        const copyIcon = document.querySelector(".copy-icon");
+        const userId = document
+          .querySelector(".user-id")
+          .textContent.trim()
+          .replace("ID：", "")
+          .replace("📋", "")
+          .trim();
+
+        copyIcon.addEventListener("click", function () {
+          navigator.clipboard
+            .writeText(userId)
+            .then(function () {
+              alert("ID已复制到剪贴板: " + userId);
+            })
+            .catch(function (err) {
+              console.error("无法复制ID: ", err);
             });
         });
+      });
     </script>
-</body>
-</html> 
+  </body>
+</html>
