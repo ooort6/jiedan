@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AREA X - 登录</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .login-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .login-content {
+            width: 90%;
+            max-width: 450px;
+            padding: 0 20px;
+            z-index: 1;
+        }
+
+        .login-header {
+            color: white;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            border: none;
+            border-radius: 50px;
+            background-color: white;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .input-group input::placeholder {
+            color: #999;
+        }
+
+        .input-group img {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+        }
+
+        .input-group .toggle-password {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 30px;
+        }
+
+        .forgot-password a {
+            color: white;
+            font-size: 14px;
+            text-decoration: none;
+            opacity: 0.8;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            background-color: #FFD700;
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .login-button:hover {
+            background-color: #F0C800;
+        }
+
+        .create-account {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .create-account a {
+            color: white;
+            font-size: 16px;
+            text-decoration: none;
+        }
+
+        .other-login {
+            text-align: center;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .other-login::before,
+        .other-login::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .other-login::before {
+            left: 0;
+        }
+
+        .other-login::after {
+            right: 0;
+        }
+
+        .other-login span {
+            color: white;
+            font-size: 14px;
+            padding: 0 10px;
+            background-color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .social-login a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+        }
+
+        .social-login img {
+            width: 25px;
+            height: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .login-header h1 {
+                font-size: 36px;
+            }
+
+            .login-header p {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-content {
+                width: 100%;
+                padding: 0 15px;
+            }
+
+            .login-header h1 {
+                font-size: 32px;
+            }
+
+            .login-header p {
+                font-size: 14px;
+            }
+
+            .input-group input {
+                padding: 12px 12px 12px 45px;
+            }
+
+            .social-login a {
+                width: 40px;
+                height: 40px;
+            }
+
+            .social-login img {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="../assest/p2/9695873fab5bd6228abe794c9304b282.png" alt="背景" class="background-image">
+        
+        <div class="login-content">
+            <div class="login-header">
+                <h1>Hello !</h1>
+                <p>ゲーム世界へようこそ、冒険始めよう！</p>
+            </div>
+            
+            <div class="input-group">
+                <img src="../assest/p1/Message - Iconly Pro.png" alt="邮箱图标">
+                <input type="email" placeholder="yin@netstars.co.jp">
+            </div>
+            
+            <div class="input-group">
+                <img src="../assest/p1/Lock - Iconly Pro.png" alt="密码图标">
+                <input type="password" placeholder="●●●●●●●">
+                <img src="../assest/p1/Hide - Iconly Pro.png" alt="显示密码" class="toggle-password">
+            </div>
+            
+            <div class="forgot-password">
+                <a href="#">パスワードをお忘れですか？</a>
+            </div>
+            
+            <button class="login-button">ログイン</button>
+            
+            <div class="create-account">
+                <a href="#">新しいアカウントを作成</a>
+            </div>
+            
+            <div class="other-login">
+                <span>その他のログイン方法</span>
+            </div>
+            
+            <div class="social-login">
+                <a href="#"><img src="../assest/p7/line 1.png" alt="LINE"></a>
+                <a href="#"><img src="../assest/p7/google 1.png" alt="Google"></a>
+                <a href="#"><img src="../assest/p10/x-8c88186b 1.png" alt="Twitter"></a>
+                <a href="#"><img src="../assest/p7/facebook 1.png" alt="Facebook"></a>
+                <a href="#"><img src="../assest/p7/apple 1.png" alt="Apple"></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.querySelector('.toggle-password');
+            const passwordInput = document.querySelector('input[type="password"]');
+            
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // 切换显示/隐藏密码图标
+                if (type === 'password') {
+                    togglePassword.src = '../assest/p1/Hide - Iconly Pro.png';
+                } else {
+                    togglePassword.src = '../assest/p1/Hide - Iconly Pro.png'; // 这里应该是另一个图标，暂时使用相同的
+                }
+            });
+        });
+    </script>
+</body>
+</html>
