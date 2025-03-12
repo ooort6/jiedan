@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>AREA X - おすすめ</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+
+      html,
+      body {
+        width: 100%;
+        min-height: 100%;
+        background-color: #fff;
+        color: #333;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 60px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+
+      /* 顶部导航 */
+      .header {
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header-title {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .search-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* Banner部分 */
+      .banner {
+        width: 100%;
+        padding: 0;
+        margin-bottom: 20px;
+        position: relative;
+        background: #F6F6F6;
+      }
+
+      .banner .swiper {
+        width: 100%;
+        padding: 20px 15px;
+      }
+
+      .banner .swiper-wrapper {
+        align-items: center;
+      }
+
+      .banner .swiper-slide {
+        width: 88%;
+        transition: 300ms;
+        transform: scale(0.92);
+        opacity: 0.5;
+      }
+
+      .banner .swiper-slide-active {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      .banner .swiper-slide img {
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .banner .swiper-pagination {
+        bottom: 8px;
+      }
+
+      .banner .swiper-pagination-bullet {
+        width: 6px;
+        height: 6px;
+        background: rgba(0, 0, 0, 0.2);
+        opacity: 1;
+        margin: 0 4px;
+      }
+
+      .banner .swiper-pagination-bullet-active {
+        width: 18px;
+        border-radius: 3px;
+        background: #333;
+      }
+
+      /* 游戏列表部分 */
+      .section {
+        padding: 0 15px;
+        margin-bottom: 20px;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .section-title {
+        font-size: 16px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .section-title img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .section-more {
+        color: #007AFF;
+        font-size: 14px;
+        text-decoration: none;
+      }
+
+      .game-list {
+        display: flex;
+        gap: 12px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .game-list::-webkit-scrollbar {
+        display: none;
+      }
+
+      .game-item {
+        flex: 0 0 auto;
+        width: 160px;
+      }
+
+      .game-cover {
+        width: 160px;
+        height: 90px;
+        border-radius: 12px;
+        margin-bottom: 8px;
+      }
+
+      .game-name {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .game-desc {
+        font-size: 12px;
+        color: #999;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .game-tag {
+        display: inline-block;
+        font-size: 12px;
+        color: #666;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: #f5f5f5;
+        margin-top: 4px;
+      }
+
+      /* 底部导航 */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        border-top: 1px solid #eee;
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .nav-icon {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 4px;
+      }
+
+      .nav-item.active {
+        color: #333;
+      }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- 顶部导航 -->
+      <div class="header">
+        <div class="header-title">ゲームショップ</div>
+        <img src="../assest/p2/Search - Iconly Pro.png" alt="search" class="search-icon" />
+      </div>
+
+      <!-- Banner部分 -->
+      <div class="banner">
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <img src="../assest/p3/8b101b84d905c236779e31d1172ce107.png" alt="魔法先生ネギま！" />
+            </div>
+            <div class="swiper-slide">
+              <img src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png" alt="ビビッドアーミー" />
+            </div>
+            <div class="swiper-slide">
+              <img src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png" alt="ありふれた職業で" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 人气游戏 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            <img src="../assest/p2/人气 1.png" alt="popular" />
+            人気ゲーム
+          </div>
+        </div>
+        <div class="game-list">
+          <div class="game-item">
+            <img src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png" alt="Game" class="game-cover" />
+            <div class="game-name">魔法先生ネギま！</div>
+           
+          </div>
+          <div class="game-item">
+            <img src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png" alt="Game" class="game-cover" />
+            <div class="game-name">ビビッドアーミー</div>
+           
+          </div>
+          <div class="game-item">
+            <img src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png" alt="Game" class="game-cover" />
+            <div class="game-name">ありふれた職業で世界最強</div>
+           
+          </div>
+        </div>
+         <div class="game-list">
+          <div class="game-item">
+            <img src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png" alt="Game" class="game-cover" />
+            <div class="game-name">魔法先生ネギま！</div>
+            
+          </div>
+          <div class="game-item">
+            <img src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png" alt="Game" class="game-cover" />
+            <div class="game-name">ビビッドアーミー</div>
+           
+          </div>
+          <div class="game-item">
+            <img src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png" alt="Game" class="game-cover" />
+            <div class="game-name">ありふれた職業で世界最強</div>
+           
+          </div>
+        </div>
+      </div>
+      
+        
+
+      <!-- 推荐游戏 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            <img src="../assest/p2/推荐icon.png" alt="recommend" />
+            おすすめゲーム
+          </div>
+          <a href="#" class="section-more">More ></a>
+        </div>
+        <div class="game-list">
+          <div class="game-item">
+            <img src="../assest/p2/game1.png" alt="Game" class="game-cover" />
+            <div class="game-name">アークナイツ</div>
+            <div class="game-desc">明日方舟 - 感染者と非感染者の戦い</div>
+            <div class="game-tag">戦略</div>
+          </div>
+          <div class="game-item">
+            <img src="../assest/p2/game2.png" alt="Game" class="game-cover" />
+            <div class="game-name">原神</div>
+            <div class="game-desc">冒険者よ、テイワットへようこそ</div>
+            <div class="game-tag">RPG</div>
+          </div>
+          <div class="game-item">
+            <img src="../assest/p2/game3.png" alt="Game" class="game-cover" />
+            <div class="game-name">ブルーアーカイブ</div>
+            <div class="game-desc">新たな物語が始まる学園戦略RPG</div>
+            <div class="game-tag">RPG</div>
+          </div>
+          <div class="game-item">
+            <img src="../assest/p2/game4.png" alt="Game" class="game-cover" />
+            <div class="game-name">ウマ娘</div>
+            <div class="game-desc">プリティーダービー - 夢の続きを、走れ！</div>
+            <div class="game-tag">育成</div>
+          </div>
+          <div class="game-item">
+            <img src="../assest/p2/game5.png" alt="Game" class="game-cover" />
+            <div class="game-name">アズールレーン</div>
+            <div class="game-desc">碧蓝航线 - 今日も愛で戦う艦隊育成</div>
+            <div class="game-tag">シューティング</div>
+          </div>
+          <div class="game-item">
+            <img src="../assest/p2/game6.png" alt="Game" class="game-cover" />
+            <div class="game-name">プリコネR</div>
+            <div class="game-desc">プリンセスコネクト！Re:Dive</div>
+            <div class="game-tag">RPG</div>
+          </div>
+          <div class="game-item">
+            <img src="../assest/p2/game7.png" alt="Game" class="game-cover" />
+            <div class="game-name">崩壊：スターレイル</div>
+            <div class="game-desc">銀河鉄道の夢、今ここに</div>
+            <div class="game-tag">RPG</div>
+          </div>
+          <div class="game-item">
+            <img src="../assest/p2/game8.png" alt="Game" class="game-cover" />
+            <div class="game-name">FGO</div>
+            <div class="game-desc">Fate/Grand Order - 運命の夜に出会って</div>
+            <div class="game-tag">RPG</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 新作游戏 -->
+      <div class="section">
+        <div class="section-header">
+          <div class="section-title">
+            <img src="../assest/p3/新作游戏 1.png" alt="new" />
+            新作ゲーム
+          </div>
+          <a href="#" class="section-more">More ></a>
+        </div>
+        <div class="game-list">
+          <div class="game-item">
+            <img src="../assest/p3/5697dbcd9921065acb502eef7a46cd0f.png" alt="Game" class="game-cover" />
+            <div class="game-name">KING OF PRISM 煌</div>
+            <div class="game-desc">星光王子的闪耀光辉，永远在你...</div>
+            <div class="game-tag">RPG</div>
+          </div>
+          <div class="game-item">
+            <img src="../assest/p3/8b101b84d905c236779e31d1172ce107.png" alt="Game" class="game-cover" />
+            <div class="game-name">蜘蛛ですが、なにか？</div>
+            <div class="game-desc">迷宮サバイバルファンタジー</div>
+            <div class="game-tag">RPG</div>
+          </div>
+          <div class="game-item">
+            <img src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png" alt="Game" class="game-cover" />
+            <div class="game-name">魔法陣グルグル</div>
+            <div class="game-desc">絵本のような可愛い世界を冒険！</div>
+            <div class="game-tag">アドベンチャー</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部导航 -->
+      <div class="bottom-nav">
+        <div class="nav-item active">
+          <img src="../assest/p2/推荐icon.png" alt="推荐" class="nav-icon" />
+          <div>おすすめ</div>
+        </div>
+        <div class="nav-item">
+          <img src="../assest/p2/火箭 1.png" alt="事前登录" class="nav-icon" />
+          <div>事前登録</div>
+        </div>
+        <div class="nav-item">
+          <img src="../assest/p2/排行榜icon.png" alt="排行榜" class="nav-icon" />
+          <div>ランキング</div>
+        </div>
+        <div class="nav-item">
+          <img src="../assest/p2/人气 1.png" alt="个人信息" class="nav-icon" />
+          <div>個人情報</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+      new Swiper('.banner .swiper', {
+        slidesPerView: 'auto',
+        centeredSlides: true,
+        spaceBetween: 8,
+        loop: false,
+        initialSlide: 1,
+        watchSlidesProgress: true,
+        watchSlidesVisibility: true
+      });
+    </script>
+  </body>
+</html> 

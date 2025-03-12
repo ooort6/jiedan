@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>AREA X - ランキング</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        background-color: #f8f5e4;
+        color: #333;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        padding: 0 15px;
+      }
+
+      /* 顶部导航 */
+      .nav {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        gap: 8px;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .nav span {
+        position: relative;
+        padding-right: 12px;
+      }
+
+      .nav span:after {
+        content: ">";
+        position: absolute;
+        right: 0;
+      }
+
+      .nav span:last-child:after {
+        display: none;
+      }
+
+      /* 分类标题 */
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px 0;
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .section-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      .section-text {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .more-link {
+        color: #007AFF;
+        text-decoration: none;
+        font-size: 16px;
+      }
+
+      /* 游戏网格 */
+      .game-grid {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+      }
+
+      .game-grid::-webkit-scrollbar {
+        display: none; /* Chrome, Safari and Opera */
+      }
+
+      .game-item {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 90px;
+      }
+
+      .game-icon-wrapper {
+        position: relative;
+        margin-bottom: 8px;
+      }
+
+      .rank-badge {
+        position: absolute;
+        top: -2px;
+        left: -5px;
+        width: 24px;
+        height: 24px;
+        background: #FFD700;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        border: 2px solid white;
+        z-index: 2;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .rank-1 { background: linear-gradient(135deg, #ffd700, #ffa500); }
+      .rank-2 { background: linear-gradient(135deg, #c0c0c0, #a9a9a9); }
+      .rank-3 { background: linear-gradient(135deg, #cd7f32, #8b4513); }
+      .rank-4 { background: #f0f0f0; color: #666; }
+
+      .game-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
+      }
+
+      .game-name {
+        font-size: 14px;
+        margin-bottom: 8px;
+        color: #333;
+        max-width: 90px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .start-btn {
+        background: #FFE11C;
+        border: none;
+        padding: 6px 20px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      /* 底部导航 */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        display: flex;
+        justify-content: space-around;
+        padding: 10px 0;
+        border-top: 1px solid #eee;
+      }
+
+      .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .nav-icon {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 4px;
+      }
+
+      .nav-item.active {
+        color: #333;
+      }
+
+      @media (max-width: 480px) {
+        .game-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="nav">
+        <span>ゲームショップ</span>
+        <span>ランキング</span>
+      </div>
+
+      <!-- 排行榜部分 -->
+      <div class="section-header">
+        <div class="section-title">
+          <img src="../assest/p2/排行榜icon.png" alt="crown" class="section-icon" />
+          <span class="section-text">ランキング</span>
+        </div>
+        <a href="#" class="more-link">More ›</a>
+      </div>
+
+      <div class="game-grid">
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <div class="rank-badge rank-1">1</div>
+            <img src="../assest/p1/Group 42.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">ビビッドアーミー</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <div class="rank-badge rank-2">2</div>
+            <img src="../assest/p2/image.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">蜘蛛ですが、なにか?</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <div class="rank-badge rank-3">3</div>
+            <img src="../assest/p3/image.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">魔法先生ネギま！</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <div class="rank-badge rank-4">4</div>
+            <img src="../assest/p4/75426ab2eb33eddd1363afc61bf1f943.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">ありふれた職業で</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <div class="rank-badge rank-5">5</div>
+            <img src="../assest/p1/Group 42.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">新作ゲーム5</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <div class="rank-badge rank-4">6</div>
+            <img src="../assest/p2/image.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">新作ゲーム6</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <div class="rank-badge rank-4">7</div>
+            <img src="../assest/p3/image.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">新作ゲーム7</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <div class="rank-badge rank-4">8</div>
+            <img src="../assest/p4/75426ab2eb33eddd1363afc61bf1f943.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">新作ゲーム8</div>
+          <button class="start-btn">Start</button>
+        </div>
+      </div>
+
+      <!-- 新作游戏部分 -->
+      <div class="section-header">
+        <div class="section-title">
+          <img src="../assest/p2/火箭 1.png" alt="new" class="section-icon" />
+          <span class="section-text">新作ゲーム</span>
+        </div>
+        <a href="#" class="more-link">More ›</a>
+      </div>
+
+      <div class="game-grid">
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <img src="../assest/p1/Group 42.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">KING OF...</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <img src="../assest/p2/image.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">月が導く異世界</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <img src="../assest/p3/image.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">魔法陣グルグル</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <img src="../assest/p4/75426ab2eb33eddd1363afc61bf1f943.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">魔法陣グルグル2</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <img src="../assest/p1/Group 42.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">新作ゲーム5</div>
+          <button class="start-btn">Start</button>
+        </div>
+      </div>
+
+      <!-- 瞬つぶし无料游戏部分 -->
+      <div class="section-header">
+        <div class="section-title">
+          <img src="../assest/p2/人气 1.png" alt="free" class="section-icon" />
+          <span class="section-text">暇つぶし無料ゲーム</span>
+        </div>
+        <a href="#" class="more-link">More ›</a>
+      </div>
+
+      <div class="game-grid">
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <img src="../assest/p1/Group 42.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">百花繚乱パズル</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <img src="../assest/p2/image.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">弱虫ペダル</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <img src="../assest/p3/image.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">キングオブ</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <img src="../assest/p4/75426ab2eb33eddd1363afc61bf1f943.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">銀河英雄伝説</div>
+          <button class="start-btn">Start</button>
+        </div>
+
+        <div class="game-item">
+          <div class="game-icon-wrapper">
+            <img src="../assest/p1/Group 42.png" alt="Game" class="game-icon" />
+          </div>
+          <div class="game-name">無料ゲーム5</div>
+          <button class="start-btn">Start</button>
+        </div>
+      </div>
+
+      <!-- 底部导航 -->
+      <div class="bottom-nav">
+        <div class="nav-item">
+          <img src="../assest/p2/推荐icon.png" alt="推荐" class="nav-icon" />
+          <div>おすすめ</div>
+        </div>
+        <div class="nav-item">
+          <img src="../assest/p2/火箭 1.png" alt="事前登录" class="nav-icon" />
+          <div>事前登録</div>
+        </div>
+        <div class="nav-item active">
+          <img src="../assest/p2/排行榜icon.png" alt="排行榜" class="nav-icon" />
+          <div>ランキング</div>
+        </div>
+        <div class="nav-item">
+          <img src="../assest/p2/人气 1.png" alt="个人信息" class="nav-icon" />
+          <div>個人情報</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html> 

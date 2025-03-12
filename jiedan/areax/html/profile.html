@@ -25,12 +25,13 @@
 
       .container {
         width: 100%;
-        max-width: 500px;
+        max-width: 800px;
         margin: 0 auto;
         height: 100%;
         display: flex;
         flex-direction: column;
         position: relative;
+        padding: 0 15px;
       }
 
       /* 顶部状态栏 */
@@ -354,6 +355,138 @@
           height: 40px;
         }
       }
+
+      /* 平板设备适配 */
+      @media (min-width: 481px) and (max-width: 1024px) {
+        .container {
+          padding: 0 30px;
+        }
+
+        /* 个人资料卡片适配 */
+        .profile-card {
+          padding: 30px;
+        }
+
+        .avatar {
+          width: 100px;
+          height: 100px;
+        }
+
+        .profile-name h2 {
+          font-size: 24px;
+        }
+
+        .level-tag {
+          font-size: 14px;
+          padding: 3px 12px;
+        }
+
+        .user-id {
+          font-size: 16px;
+        }
+
+        .copy-icon {
+          width: 18px;
+          height: 18px;
+        }
+
+        /* 功能卡片适配 */
+        .function-card {
+          margin: 15px 20px;
+          padding: 20px;
+        }
+
+        .account-function {
+          padding: 20px;
+        }
+
+        .account-icon {
+          width: 36px;
+          height: 36px;
+        }
+
+        .account-name {
+          font-size: 16px;
+        }
+
+        /* SNS连接部分适配 */
+        .section-title {
+          font-size: 20px;
+        }
+
+        .sns-icon {
+          width: 60px;
+          height: 60px;
+        }
+
+        .sns-connect {
+          font-size: 14px;
+          padding: 6px 18px;
+        }
+
+        /* 设置列表适配 */
+        .settings-item {
+          padding: 20px 10px;
+        }
+
+        .settings-icon {
+          width: 28px;
+          height: 28px;
+        }
+
+        .settings-name {
+          font-size: 18px;
+        }
+
+        /* 底部导航适配 */
+        .bottom-nav {
+          padding: 15px 0;
+        }
+
+        .nav-item {
+          font-size: 14px;
+        }
+
+        .nav-icon {
+          width: 28px;
+          height: 28px;
+          margin-bottom: 8px;
+        }
+
+        /* 黄色背景波浪适配 */
+        .yellow-wave {
+          height: 300px;
+        }
+      }
+
+      /* 横屏模式优化 */
+      @media (orientation: landscape) and (min-width: 481px) {
+        .container {
+          padding: 0 40px;
+        }
+
+        .function-card {
+          margin: 15px 25px;
+        }
+
+        .sns-list {
+          justify-content: space-around;
+          padding: 0 40px;
+        }
+
+        .settings-list {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+        }
+
+        .settings-item {
+          border: none;
+          background: #f8f8f8;
+          border-radius: 12px;
+          padding: 15px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -515,23 +648,19 @@
       <!-- 底部导航 -->
       <div class="bottom-nav">
         <div class="nav-item">
-          <img src="../assest/p7/Group 39.png" alt="推荐" class="nav-icon" />
+          <img src="../assest/p2/推荐icon.png" alt="推荐" class="nav-icon" />
           <div>おすすめ</div>
         </div>
         <div class="nav-item">
-          <img
-            src="../assest/p7/Frame 13.png"
-            alt="事前登录"
-            class="nav-icon"
-          />
+          <img src="../assest/p2/火箭 1.png" alt="事前登录" class="nav-icon" />
           <div>事前登録</div>
         </div>
         <div class="nav-item">
-          <img src="../assest/p7/Group 39.png" alt="排行榜" class="nav-icon" />
+          <img src="../assest/p2/排行榜icon.png" alt="排行榜" class="nav-icon" />
           <div>ランキング</div>
         </div>
         <div class="nav-item active">
-          <img src="../assest/p7/Vector.png" alt="个人信息" class="nav-icon" />
+          <img src="../assest/p2/人气 1.png" alt="个人信息" class="nav-icon" />
           <div>個人情報</div>
         </div>
       </div>
