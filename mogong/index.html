@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>嵌套表格示例</title>
+    <!-- 引入样式 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/ant-design-vue@4.0.7/dist/antd.css"
+      rel="stylesheet"
+    />
+    <!-- 引入依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/customParseFormat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/weekday.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/localeData.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/weekOfYear.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/weekYear.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/advancedFormat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/quarterOfYear.js"></script>
+    <!-- 引入 Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.prod.js"></script>
+    <!-- 引入 Ant Design Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/ant-design-vue@4.0.7/dist/antd-with-locales.js"></script>
+    <style>
+      #app {
+        padding: 20px;
+      }
+      .nested-table {
+        margin-left: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <a-table
+        :columns="columns"
+        :data-source="data"
+        :expand-row-by-click="true"
+      >
+        <template #expandedRowRender="{ record }">
+          <div class="nested-table">
+            <a-table
+              :columns="nestedColumns"
+              :data-source="record.children"
+              :pagination="false"
+            >
+            </a-table>
+          </div>
+        </template>
+      </a-table>
+    </div>
+
+    <script>
+      // 注册 dayjs 插件
+      dayjs.extend(window.dayjs_plugin_customParseFormat);
+      dayjs.extend(window.dayjs_plugin_weekday);
+      dayjs.extend(window.dayjs_plugin_localeData);
+      dayjs.extend(window.dayjs_plugin_weekOfYear);
+      dayjs.extend(window.dayjs_plugin_weekYear);
+      dayjs.extend(window.dayjs_plugin_advancedFormat);
+      dayjs.extend(window.dayjs_plugin_quarterOfYear);
+
+      const app = Vue.createApp({
+        setup() {
+          const columns = [
+            {
+              title: "姓名",
+              dataIndex: "name",
+              key: "name",
+            },
+            {
+              title: "年龄",
+              dataIndex: "age",
+              key: "age",
+            },
+            {
+              title: "地址",
+              dataIndex: "address",
+              key: "address",
+            },
+          ];
+
+          const nestedColumns = [
+            {
+              title: "日期",
+              dataIndex: "date",
+              key: "date",
+            },
+            {
+              title: "详细信息",
+              dataIndex: "info",
+              key: "info",
+            },
+          ];
+
+          const data = [
+            {
+              key: 1,
+              name: "张三",
+              age: 32,
+              address: "北京市朝阳区",
+              children: [
+                {
+                  key: "1-1",
+                  date: "2024-03-12",
+                  info: "完成项目A的开发",
+                },
+                {
+                  key: "1-2",
+                  date: "2024-03-13",
+                  info: "参加技术评审会议",
+                },
+              ],
+            },
+            {
+              key: 2,
+              name: "李四",
+              age: 28,
+              address: "上海市浦东新区",
+              children: [
+                {
+                  key: "2-1",
+                  date: "2024-03-12",
+                  info: "完成需求分析",
+                },
+                {
+                  key: "2-2",
+                  date: "2024-03-13",
+                  info: "开始功能测试",
+                },
+              ],
+            },
+          ];
+
+          return {
+            columns,
+            nestedColumns,
+            data,
+          };
+        },
+      });
+
+      app.use(window.antd);
+      app.mount("#app");
+    </script>
+  </body>
+</html>
