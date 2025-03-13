@@ -318,14 +318,43 @@
 
                 <a-tabs v-model:activeKey="activeTabKey">
                   <a-tab-pane key="1" tab="脚本">
-                    <div style="padding: 16px; height: 50vh; overflow-y: auto">
-                      <a-tree
-                        :tree-data="scriptTreeData"
-                        v-model:selectedKeys="selectedScriptKeys"
-                        :default-expanded-keys="['1']"
-                        style="margin-bottom: 16px"
-                      />
+                    <div style="display: flex; height: 50vh">
+                      <!-- 左侧文件列表 -->
+                      <div
+                        style="
+                          width: 300px;
+                          padding: 16px;
+                          border-right: 1px solid #f0f0f0;
+                          height: 100%;
+                          overflow-y: auto;
+                        "
+                      >
+                        <a-tree
+                          :tree-data="scriptTreeData"
+                          v-model:selectedKeys="selectedScriptKeys"
+                          :default-expanded-keys="['1']"
+                          @select="handleScriptSelect"
+                        />
+                      </div>
+
+                      <!-- 右侧内容区域 -->
+                      <div
+                        style="
+                          flex: 1;
+                          padding: 16px;
+                          height: 100%;
+                          overflow-y: auto;
+                        "
+                      >
+                        <a-textarea
+                          v-model:value="currentScriptContent"
+                          :rows="28"
+                          :placeholder="selectedScriptKeys.length ? '在这里编辑脚本内容...' : '请先选择一个脚本文件'"
+                          style="resize: none; width: 100%; height: 100%"
+                        />
+                      </div>
                     </div>
+                    <!-- 底部按钮组 -->
                     <div
                       style="
                         padding: 16px;
@@ -1555,6 +1584,20 @@
           const itemContent = ref("");
           const recordContent = ref("");
 
+          const currentScriptContent = ref("");
+
+          const handleScriptSelect = (selectedKeys, info) => {
+            if (selectedKeys.length > 0) {
+              // 这里可以根据选中的脚本文件加载其内容
+              const selectedScript = scriptTreeData.value.find(
+                (item) => item.key === selectedKeys[0]
+              );
+              if (selectedScript) {
+                currentScriptContent.value = `// ${selectedScript.title} 的内容\n`;
+              }
+            }
+          };
+
           // 返回模板需要使用的数据和方法
           return {
             activeTab,
@@ -1605,6 +1648,8 @@
             teamContent,
             itemContent,
             recordContent,
+            currentScriptContent,
+            handleScriptSelect,
           };
         },
       });
