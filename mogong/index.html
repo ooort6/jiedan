@@ -1,146 +1,1631 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
-    <meta charset="utf-8" />
-    <title>嵌套表格示例</title>
-    <!-- 引入样式 -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KC控制台</title>
+
+    <script src="https://unpkg.com/vue@3.4.27/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/dayjs/dayjs.min.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/customParseFormat.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/weekday.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/localeData.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/weekOfYear.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/weekYear.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/advancedFormat.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/quarterOfYear.js"></script>
     <link
-      href="https://cdn.jsdelivr.net/npm/ant-design-vue@4.0.7/dist/antd.css"
+      type="text/css"
+      href="https://unpkg.com/ant-design-vue@4.2.3/dist/reset.css"
+      media="screen"
       rel="stylesheet"
     />
-    <!-- 引入依赖 -->
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/customParseFormat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/weekday.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/localeData.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/weekOfYear.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/weekYear.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/advancedFormat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/plugin/quarterOfYear.js"></script>
-    <!-- 引入 Vue -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.prod.js"></script>
-    <!-- 引入 Ant Design Vue -->
-    <script src="https://cdn.jsdelivr.net/npm/ant-design-vue@4.0.7/dist/antd-with-locales.js"></script>
+    <script src="https://unpkg.com/ant-design-vue@4.2.3/dist/antd.min.js"></script>
+
+    <!-- 使用内联SVG图标替代图标库 -->
     <style>
-      #app {
-        padding: 20px;
+      /* 自定义图标样式 */
+      .custom-icon {
+        display: inline-flex;
+        align-items: center;
+        line-height: 0;
+        text-align: center;
+        vertical-align: -0.125em;
+        fill: currentColor;
+        margin-right: 8px; /* 增加图标与文字之间的间距 */
       }
-      .nested-table {
-        margin-left: 20px;
+
+      .custom-icon svg {
+        width: 1em;
+        height: 1em;
+      }
+
+      /* 按钮中的图标间距 */
+      .ant-btn .anticon {
+        margin-right: 8px;
+      }
+
+      /* 确保按钮中的自定义图标有足够间距 */
+      .ant-btn .custom-icon {
+        margin-right: 8px;
+      }
+
+      /* 表格展开图标样式 */
+      .ant-table-row-expand-icon {
+        margin-right: 8px;
+      }
+
+      /* 确保所有图标组件与文字之间有间距 */
+      [class*="anticon-"],
+      [class*="icon-"] {
+        margin-right: 8px;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0 2rem 0 1rem;
+        color: rgb(24, 144, 255);
+      }
+
+      .user-counter {
+        color: rgb(24, 144, 255);
+        font-weight: 500;
+        margin: 0px 3px;
+      }
+
+      .user-text {
+        color: #666;
+      }
+
+      .version-title {
+        color: #1890ff;
+      }
+
+      .nav-container {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 0 20px;
+      }
+
+      .nav-item {
+        margin-right: 32px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s;
+        color: rgba(0, 0, 0, 0.88);
+      }
+
+      .nav-item:hover {
+        color: #1890ff;
+      }
+
+      .nav-item.active {
+        color: #1890ff;
+      }
+
+      .nav-item.active::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: #1890ff;
+      }
+
+      :where(.css-1p3hq3p).ant-table-wrapper .ant-table-thead > tr > th,
+      :where(.css-1p3hq3p).ant-table-wrapper .ant-table-tbody > tr > td,
+      :where(.css-1p3hq3p).ant-table-wrapper tfoot > tr > th,
+      :where(.css-1p3hq3p).ant-table-wrapper tfoot > tr > td {
+        padding: 4px;
+      }
+
+      .ant-table-wrapper {
+        margin-bottom: 16px;
+      }
+
+      .ant-btn-link {
+        padding: 0;
+        height: auto;
+        line-height: inherit;
+      }
+
+      .ant-table-row.ant-table-row-level-0 > .ant-table-cell:nth-child(7) {
+        color: #1677ff;
+        cursor: pointer;
+      }
+
+      /* 添加以下移动设备适配样式 */
+      @media screen and (max-width: 768px) {
+        body {
+          min-width: 1200px;
+          /* 设置最小宽度，保持原有布局 */
+          overflow-x: auto;
+          /* 允许横向滚动 */
+          -webkit-overflow-scrolling: touch;
+          /* iOS 滚动优化 */
+        }
+
+        #app {
+          width: 1200px;
+          /* 固定宽度 */
+          overflow-x: visible;
+        }
+
+        .ant-layout {
+          width: 100%;
+          min-width: 1200px;
+        }
+
+        /* 固定头部，但保持在可滚动区域内 */
+        .ant-layout-header {
+          width: 1200px;
+          position: sticky !important;
+          top: 0;
+          z-index: 999;
+        }
+      }
+
+      /* 优化触摸滚动体验 */
+      * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
       }
     </style>
   </head>
+
   <body>
     <div id="app">
-      <a-table
-        :columns="columns"
-        :data-source="data"
-        :expand-row-by-click="true"
-      >
-        <template #expandedRowRender="{ record }">
-          <div class="nested-table">
-            <a-table
-              :columns="nestedColumns"
-              :data-source="record.children"
-              :pagination="false"
+      <a-layout>
+        <a-layout-header
+          style="
+            padding: 0;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: 2px 5px 5px #eee;
+          "
+        >
+          <div class="logo" style="padding-left: 20px">
+            <a href="#" style="color: #1890ff; text-decoration: none"
+              >KC控制台</a
             >
-            </a-table>
           </div>
-        </template>
-      </a-table>
+          <div class="nav-container">
+            <div
+              class="nav-item"
+              :class="{ active: activeTab === '1' }"
+              @click="switchTab('1')"
+            >
+              综合界面
+            </div>
+            <div
+              class="nav-item"
+              :class="{ active: activeTab === '2' }"
+              @click="switchTab('2')"
+            >
+              使用说明
+            </div>
+          </div>
+          <div
+            style="
+              position: absolute;
+              right: 20px;
+              top: 0;
+              height: 64px;
+              display: flex;
+              align-items: center;
+            "
+          >
+            <span class="user-counter">{{ onlineUsers }}</span>
+            <span class="user-text">666666</span>
+          </div>
+        </a-layout-header>
+        <a-layout style="background-color: #fff">
+          <a-layout-content
+            style="margin: 0; min-height: 280px"
+            :style="{padding: activeTab === '1'?'24px':'0'}"
+          >
+            <!-- 添加Modal组件 -->
+            <a-modal
+              v-model:visible="isModalVisible"
+              title="脚本设置"
+              width="1000px"
+              style="top: 20px"
+              :bodyStyle="{
+                maxHeight: 'calc(100vh - 200px)',
+                height: '600px',
+                overflow: 'auto',
+                padding: '24px'
+              }"
+            >
+              <template #footer>
+                <div style="text-align: left">
+                  <a-button
+                    type="primary"
+                    @click="handleStart"
+                    style="margin-right: 8px"
+                  >
+                    <template #icon>
+                      <component
+                        :is="icons.PlayCircleOutlined"
+                        style="margin-right: 8px"
+                      />
+                    </template>
+                    启动
+                  </a-button>
+                  <a-button danger @click="handleStop">
+                    <template #icon>
+                      <component
+                        :is="icons.DeleteOutlined"
+                        style="margin-right: 8px"
+                      />
+                    </template>
+                    停止
+                  </a-button>
+                </div>
+              </template>
+              <div style="min-height: 600px; margin-top: 16px">
+                <a-form layout="inline" style="margin-bottom: 16px">
+                  <a-form-item>
+                    <input
+                      type="file"
+                      ref="scriptFileInput"
+                      style="display: none"
+                      @change="handleScriptFileChange"
+                    />
+                    <a-button type="primary" @click="openScriptFile">
+                      <template #icon>
+                        <component
+                          :is="icons.FileTextOutlined"
+                          style="margin-right: 8px"
+                        />
+                      </template>
+                      {{ selectedFileName || '全自动1-23级蓝号角1件蓝装.lua' }}
+                    </a-button>
+                  </a-form-item>
+                  <a-form-item>
+                    <a-button type="primary" @click="handleAdd"
+                      >查看/修改</a-button
+                    >
+                  </a-form-item>
+                  <a-form-item>
+                    <a-button type="primary" @click="handleAdd"
+                      >全部写同步脚本</a-button
+                    >
+                  </a-form-item>
+                  <a-form-item>
+                    <a-button type="primary" @click="handleAdd"
+                      >全部写同步配置</a-button
+                    >
+                  </a-form-item>
+                  <a-form-item>
+                    <a-button type="primary" @click="handleAdd"
+                      >打开脚本目录</a-button
+                    >
+                  </a-form-item>
+                  <a-form-item>
+                    <a-button type="primary" @click="handleAdd"
+                      >初始化配置文件</a-button
+                    >
+                  </a-form-item>
+                </a-form>
+
+                <a-tabs v-model:activeKey="activeTabKey">
+                  <a-tab-pane key="1" tab="脚本">
+                    <div style="padding: 16px; height: 50vh; overflow-y: auto">
+                      <a-tree
+                        :tree-data="scriptTreeData"
+                        v-model:selectedKeys="selectedScriptKeys"
+                        :default-expanded-keys="['1']"
+                        style="margin-bottom: 16px"
+                      />
+                    </div>
+                    <div
+                      style="
+                        padding: 16px;
+                        border-top: 1px solid #f0f0f0;
+                        background: white;
+                      "
+                    >
+                      <div style="display: flex; gap: 8px">
+                        <a-button type="primary" @click="handleNewScript">
+                          <template #icon>
+                            <component
+                              :is="icons.FileAddOutlined"
+                              style="margin-right: 8px"
+                            />
+                          </template>
+                          新建脚本文件
+                        </a-button>
+                        <a-button
+                          type="primary"
+                          danger
+                          @click="handleDeleteScript"
+                          :disabled="!selectedScriptKeys.length"
+                        >
+                          <template #icon>
+                            <component
+                              :is="icons.DeleteOutlined"
+                              style="margin-right: 8px"
+                            />
+                          </template>
+                          删除选中脚本
+                        </a-button>
+                        <a-button
+                          type="primary"
+                          @click="handleRunScript"
+                          :disabled="!selectedScriptKeys.length"
+                        >
+                          <template #icon>
+                            <component
+                              :is="icons.PlayCircleOutlined"
+                              style="margin-right: 8px"
+                            />
+                          </template>
+                          运行选中脚本
+                        </a-button>
+                      </div>
+                    </div>
+                  </a-tab-pane>
+                  <a-tab-pane key="2" tab="设置">
+                    <div style="padding: 16px">
+                      <a-textarea
+                        v-model:value="settingsContent"
+                        :rows="20"
+                        placeholder="在这里编辑设置内容..."
+                        style="resize: none; width: 100%"
+                      />
+                    </div>
+                  </a-tab-pane>
+                  <a-tab-pane key="3" tab="狩猎">
+                    <div style="padding: 16px">
+                      <a-textarea
+                        v-model:value="huntingContent"
+                        :rows="20"
+                        placeholder="在这里编辑狩猎相关内容..."
+                        style="resize: none; width: 100%"
+                      />
+                    </div>
+                  </a-tab-pane>
+                  <a-tab-pane key="4" tab="保护">
+                    <div style="padding: 16px">
+                      <a-textarea
+                        v-model:value="protectContent"
+                        :rows="20"
+                        placeholder="在这里编辑保护相关内容..."
+                        style="resize: none; width: 100%"
+                      />
+                    </div>
+                  </a-tab-pane>
+                  <a-tab-pane key="5" tab="组队">
+                    <div style="padding: 16px">
+                      <a-textarea
+                        v-model:value="teamContent"
+                        :rows="20"
+                        placeholder="在这里编辑组队相关内容..."
+                        style="resize: none; width: 100%"
+                      />
+                    </div>
+                  </a-tab-pane>
+                  <a-tab-pane key="6" tab="物品">
+                    <div style="padding: 16px">
+                      <a-textarea
+                        v-model:value="itemContent"
+                        :rows="20"
+                        placeholder="在这里编辑物品相关内容..."
+                        style="resize: none; width: 100%"
+                      />
+                    </div>
+                  </a-tab-pane>
+                  <a-tab-pane key="7" tab="录制">
+                    <div style="padding: 16px">
+                      <a-textarea
+                        v-model:value="recordContent"
+                        :rows="20"
+                        placeholder="在这里编辑录制相关内容..."
+                        style="resize: none; width: 100%"
+                      />
+                    </div>
+                  </a-tab-pane>
+                </a-tabs>
+              </div>
+            </a-modal>
+
+            <!-- 配置器内容 -->
+            <a-row v-if="activeTab === '1'">
+              <a-col :span="5">
+                <a-card title="更新日志" style="margin-right: 20px">
+                  <a-timeline>
+                    <a-timeline-item>
+                      <div class="version-title">2025.03.10: 版本2.0.0</div>
+                      <div>版面优化，交互优化</div>
+                    </a-timeline-item>
+                    <a-timeline-item>
+                      <div class="version-title">2025.03.05: 版本1.1.2</div>
+                      <div>增加神兵特效</div>
+                      <div>增加主界面显示特效</div>
+                    </a-timeline-item>
+                    <a-timeline-item>
+                      <div class="version-title">2025.02.28: 版本1.1.1</div>
+                      <div>优化装备快速筛选功能</div>
+                      <div>修复若干装备错误</div>
+                      <div>增加图片分享功能演示视频</div>
+                    </a-timeline-item>
+                  </a-timeline>
+                </a-card>
+                <a-card title="联系我们" style="margin: 20px 20px 0 0">
+                  <div>BUG反馈、建议意见、新版尝鲜</div>
+                  <img
+                    src="https://zxsj.akii.fun/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fqrcode.405f63d4.png&w=640&q=75"
+                    style="width: 90%; display: block; margin: 0 auto"
+                  />
+                </a-card>
+              </a-col>
+
+              <a-col :span="19">
+                <!-- 登录验证 -->
+                <div style="margin-top: 1px">
+                  <div style="margin-bottom: 16px">
+                    <a-form layout="inline">
+                      <a-form-item label="账号">
+                        <a-input
+                          v-model:value="user"
+                          placeholder="Username"
+                          style="width: 250px"
+                        />
+                      </a-form-item>
+
+                      <a-form-item>
+                        <a-button type="primary" @click="handleAdd"
+                          >登录</a-button
+                        >
+                      </a-form-item>
+
+                      <a-form-item>
+                        <a-button type="dashed" @click="handleAdd"
+                          >注册/充值</a-button
+                        >
+                      </a-form-item>
+
+                      <a-form-item label="Gamepath">
+                        <a-input
+                          v-model:value="user"
+                          placeholder="Gamepath"
+                          style="width: 200px"
+                        />
+                      </a-form-item>
+
+                      <a-form-item>
+                        <a-button type="primary" @click="handleAdd">
+                          <template #icon>
+                            <component
+                              :is="icons.SearchOutlined"
+                              style="margin-right: 8px"
+                            />
+                          </template>
+                          路径
+                        </a-button>
+                      </a-form-item>
+                    </a-form>
+                  </div>
+                </div>
+
+                <div id="container" style="padding: 24px" />
+                <script>
+                  const mountNode = document.getElementById("container");
+                </script>
+
+                <!-- 表格操作按钮 -->
+                <div style="margin-bottom: 16px; display: flex; gap: 8px">
+                  <!-- 移除展开所有和收起所有按钮 -->
+                </div>
+
+                <!-- 表格 -->
+                <a-table
+                  :data-source="dataSource"
+                  :columns="expandColumns"
+                  :pagination="false"
+                  @expand="onExpand"
+                >
+                </a-table>
+
+                <!-- 添加信息 -->
+                <a-form layout="inline">
+                  <a-form-item label="">
+                    <a-select v-model:value="defaultRole" style="width: 120px">
+                      <a-select-option value="默认角色"
+                        >默认角色</a-select-option
+                      >
+                      <a-select-option value="特殊角色"
+                        >特殊角色</a-select-option
+                      >
+                    </a-select>
+                  </a-form-item>
+                  <a-form-item label="">
+                    <a-select v-model:value="defaultRole2" style="width: 120px">
+                      <a-select-option value="门派">门派</a-select-option>
+                      <a-select-option value="玩家">玩家</a-select-option>
+                    </a-select>
+                  </a-form-item>
+                  <a-form-item label="Username">
+                    <a-input
+                      v-model:value="username"
+                      placeholder="Username"
+                      style="width: 150px"
+                    />
+                  </a-form-item>
+                  <a-form-item label="Password">
+                    <a-input
+                      v-model:value="password"
+                      type="password"
+                      placeholder="Password"
+                      style="width: 150px"
+                    />
+                  </a-form-item>
+                  <a-form-item>
+                    <a-button type="primary" @click="handleAdd">添加</a-button>
+                  </a-form-item>
+
+                  <div style="flex: 1"></div>
+
+                  <a-form-item style="margin-right: 8px">
+                    <a-button type="primary" @click="handleBackup">
+                      <template #icon>
+                        <component
+                          :is="icons.DownloadOutlined"
+                          style="margin-right: 8px"
+                        />
+                      </template>
+                      备份数据
+                    </a-button>
+                  </a-form-item>
+                  <a-form-item>
+                    <a-button @click="handleImport">
+                      <template #icon>
+                        <component
+                          :is="icons.UploadOutlined"
+                          style="margin-right: 8px"
+                        />
+                      </template>
+                      导入备份
+                    </a-button>
+                  </a-form-item>
+                </a-form>
+
+                <div style="margin-top: 32px">
+                  <div style="margin-bottom: 16px">
+                    <a-button type="primary" @click="triggerFileInput">
+                      <template #icon>
+                        <component
+                          :is="icons.FileTextOutlined"
+                          style="margin-right: 8px"
+                        />
+                      </template>
+                      读取文本
+                    </a-button>
+                    <a-button style="margin-left: 8px" @click="handleClearText">
+                      <template #icon>
+                        <component
+                          :is="icons.DeleteOutlined"
+                          style="margin-right: 8px"
+                        />
+                      </template>
+                      清空
+                    </a-button>
+                  </div>
+                  <input
+                    type="file"
+                    ref="fileInput"
+                    accept=".txt"
+                    style="display: none"
+                    @change="handleFileChange"
+                  />
+                  <a-textarea
+                    v-model:value="textContent"
+                    :rows="6"
+                    placeholder="显示文本内容"
+                    style="resize: none; width: 100%; min-height: 300px"
+                  />
+                </div>
+              </a-col>
+            </a-row>
+
+            <!-- 关于页面内容 -->
+            <div
+              v-if="activeTab === '2'"
+              style="background-color: #f5f5f5; padding: 20px 0"
+            >
+              <div
+                style="
+                  max-width: 800px;
+                  margin: 0 auto;
+                  padding: 20px;
+                  background-color: #fff;
+                  border-radius: 10px;
+                "
+              >
+                <h1
+                  style="
+                    font-size: 28px;
+                    font-weight: bold;
+                    margin-bottom: 24px;
+                  "
+                >
+                  关于控制台说明
+                </h1>
+                <p>标题。</p>
+
+                <h2 style="font-size: 20px; margin: 32px 0 16px">主要功能</h2>
+                <ul style="padding-left: 20px">
+                  <li>aaaaaaaaa</li>
+                </ul>
+
+                <h2 style="font-size: 20px; margin: 32px 0 16px">技能设置</h2>
+                <ul style="padding-left: 20px">
+                  <li>bbbbbbbbbb</li>
+                </ul>
+
+                <h2 style="font-size: 20px; margin: 32px 0 16px">更新日志</h2>
+                <ul style="padding-left: 20px">
+                  <li>
+                    <strong>2025.02.21: 版本1.0.8</strong>
+                    <ul style="margin-top: 8px">
+                      <li>增加自动高亮功能（试用）</li>
+                    </ul>
+                  </li>
+                  <li style="margin-top: 16px">
+                    <strong>2025.02.19: 版本1.0.7</strong>
+                    <ul style="margin-top: 8px">
+                      <li>增加10人副本至20人副本模型显示效果</li>
+                    </ul>
+                  </li>
+                  <li style="margin-top: 16px">
+                    <strong>2025.02.17: 版本1.0.6</strong>
+                    <ul style="margin-top: 8px">
+                      <li>ddddddddd</li>
+                    </ul>
+                  </li>
+                </ul>
+
+                <h2 style="font-size: 20px; margin: 32px 0 16px">使用说明</h2>
+                <ul style="padding-left: 20px">
+                  <li>eeeeeeeeeeeeeeeee</li>
+                </ul>
+
+                <h2 style="font-size: 20px; margin: 32px 0 16px">联系我们</h2>
+                <p>
+                  如果您有任何建议或发现任何问题，欢迎通过以下方式联系我们：
+                </p>
+                <div style="text-align: center; margin-top: 20px">
+                  <img src="" style="width: 200px; margin: 0 auto" />
+                  <p style="margin-top: 10px; color: #666">加入群聊</p>
+                </div>
+              </div>
+            </div>
+          </a-layout-content>
+        </a-layout>
+      </a-layout>
     </div>
-
     <script>
-      // 注册 dayjs 插件
-      dayjs.extend(window.dayjs_plugin_customParseFormat);
-      dayjs.extend(window.dayjs_plugin_weekday);
-      dayjs.extend(window.dayjs_plugin_localeData);
-      dayjs.extend(window.dayjs_plugin_weekOfYear);
-      dayjs.extend(window.dayjs_plugin_weekYear);
-      dayjs.extend(window.dayjs_plugin_advancedFormat);
-      dayjs.extend(window.dayjs_plugin_quarterOfYear);
+      const { createApp, ref, h, reactive, onMounted, nextTick } = Vue;
+      const {
+        Layout,
+        Card,
+        Timeline,
+        Row,
+        Col,
+        Table,
+        Form,
+        Select,
+        Divider,
+        Input,
+        Button,
+        message,
+        Modal,
+        DownloadOutlined,
+        UploadOutlined,
+        FileTextOutlined,
+        DeleteOutlined,
+        Tabs,
+        TabPane,
+        Tree,
+      } = antd;
 
-      const app = Vue.createApp({
+      // 确保图标库正确引入
+      const icons = {
+        // 搜索图标
+        SearchOutlined: {
+          render() {
+            return h("span", { class: "custom-icon" }, [
+              h(
+                "svg",
+                {
+                  viewBox: "64 64 896 896",
+                  focusable: "false",
+                  "data-icon": "search",
+                  width: "1em",
+                  height: "1em",
+                  fill: "currentColor",
+                },
+                [
+                  h("path", {
+                    d: "M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.6-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z",
+                  }),
+                ]
+              ),
+            ]);
+          },
+        },
+        // 下载图标
+        DownloadOutlined: {
+          render() {
+            return h("span", { class: "custom-icon" }, [
+              h(
+                "svg",
+                {
+                  viewBox: "64 64 896 896",
+                  focusable: "false",
+                  "data-icon": "download",
+                  width: "1em",
+                  height: "1em",
+                  fill: "currentColor",
+                },
+                [
+                  h("path", {
+                    d: "M505.7 661a8 8 0 0012.6 0l112-141.7c4.1-5.2.4-12.9-6.3-12.9h-74.1V168c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v338.3H400c-6.7 0-10.4 7.7-6.3 12.9l112 141.8zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z",
+                  }),
+                ]
+              ),
+            ]);
+          },
+        },
+        // 上传图标
+        UploadOutlined: {
+          render() {
+            return h("span", { class: "custom-icon" }, [
+              h(
+                "svg",
+                {
+                  viewBox: "64 64 896 896",
+                  focusable: "false",
+                  "data-icon": "upload",
+                  width: "1em",
+                  height: "1em",
+                  fill: "currentColor",
+                },
+                [
+                  h("path", {
+                    d: "M400 317.7h73.9V656c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V317.7H624c6.7 0 10.4-7.7 6.3-12.9L518.3 163a8 8 0 00-12.6 0l-112 141.7c-4.1 5.3-.4 13 6.3 13zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z",
+                  }),
+                ]
+              ),
+            ]);
+          },
+        },
+        // 文件图标
+        FileTextOutlined: {
+          render() {
+            return h("span", { class: "custom-icon" }, [
+              h(
+                "svg",
+                {
+                  viewBox: "64 64 896 896",
+                  focusable: "false",
+                  "data-icon": "file-text",
+                  width: "1em",
+                  height: "1em",
+                  fill: "currentColor",
+                },
+                [
+                  h("path", {
+                    d: "M854.6 288.6L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.7-9.4-22.7zM790.2 326H602V137.8L790.2 326zm1.8 562H232V136h302v216a42 42 0 0042 42h216v494zM504 618H320c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h184c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8zM312 490v48c0 4.4 3.6 8 8 8h384c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8H320c-4.4 0-8 3.6-8 8z",
+                  }),
+                ]
+              ),
+            ]);
+          },
+        },
+        // 删除图标
+        DeleteOutlined: {
+          render() {
+            return h("span", { class: "custom-icon" }, [
+              h(
+                "svg",
+                {
+                  viewBox: "64 64 896 896",
+                  focusable: "false",
+                  "data-icon": "delete",
+                  width: "1em",
+                  height: "1em",
+                  fill: "currentColor",
+                },
+                [
+                  h("path", {
+                    d: "M360 184h-8c4.4 0 8-3.6 8-8v8h304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72v-72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32zM731.3 840H292.7l-24.2-512h487l-24.2 512z",
+                  }),
+                ]
+              ),
+            ]);
+          },
+        },
+        // 向下图标
+        DownOutlined: {
+          render() {
+            return h("span", { class: "custom-icon" }, [
+              h(
+                "svg",
+                {
+                  viewBox: "64 64 896 896",
+                  focusable: "false",
+                  "data-icon": "down",
+                  width: "1em",
+                  height: "1em",
+                  fill: "currentColor",
+                },
+                [
+                  h("path", {
+                    d: "M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z",
+                  }),
+                ]
+              ),
+            ]);
+          },
+        },
+        // 向右图标
+        RightOutlined: {
+          render() {
+            return h("span", { class: "custom-icon" }, [
+              h(
+                "svg",
+                {
+                  viewBox: "64 64 896 896",
+                  focusable: "false",
+                  "data-icon": "right",
+                  width: "1em",
+                  height: "1em",
+                  fill: "currentColor",
+                },
+                [
+                  h("path", {
+                    d: "M765.7 486.8L314.9 134.7A7.97 7.97 0 00302 141v77.3c0 4.9 2.3 9.6 6.1 12.6l360 281.1-360 281.1c-3.9 3-6.1 7.7-6.1 12.6V883c0 6.7 7.7 10.4 12.9 6.3l450.8-352.1a31.96 31.96 0 000-50.4z",
+                  }),
+                ]
+              ),
+            ]);
+          },
+        },
+        // 添加文件图标
+        FileAddOutlined: {
+          render() {
+            return h("span", { class: "custom-icon" }, [
+              h(
+                "svg",
+                {
+                  viewBox: "64 64 896 896",
+                  focusable: "false",
+                  "data-icon": "file-add",
+                  width: "1em",
+                  height: "1em",
+                  fill: "currentColor",
+                },
+                [
+                  h("path", {
+                    d: "M854.6 288.6L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.7-9.4-22.7zM790.2 326H602V137.8L790.2 326zm1.8 562H232V136h302v216a42 42 0 0042 42h216v494zM544 472c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v108H372c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h108v108c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V644h108c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8H544V472z",
+                  }),
+                ]
+              ),
+            ]);
+          },
+        },
+        // 播放图标
+        PlayCircleOutlined: {
+          render() {
+            return h("span", { class: "custom-icon" }, [
+              h(
+                "svg",
+                {
+                  viewBox: "64 64 896 896",
+                  focusable: "false",
+                  "data-icon": "play-circle",
+                  width: "1em",
+                  height: "1em",
+                  fill: "currentColor",
+                },
+                [
+                  h("path", {
+                    d: "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z",
+                  }),
+                  h("path", {
+                    d: "M719.4 499.1l-296.1-215A15.9 15.9 0 00398 297v430c0 13.1 14.8 20.5 25.3 12.9l296.1-215a15.9 15.9 0 000-25.8zm-257.6 134V390.9L628.5 512 461.8 633.1z",
+                  }),
+                ]
+              ),
+            ]);
+          },
+        },
+      };
+
+      // 使用自定义图标
+      const iconsLoaded = true;
+
+      const app = createApp({
         setup() {
-          const columns = [
+          const activeTab = ref("1");
+          const onlineUsers = ref(132);
+          const defaultRole = ref("默认角色");
+          const defaultRole2 = ref("门派");
+          const username = ref("");
+          const password = ref("");
+          const expandedRowKeys = ref([]);
+          const isModalVisible = ref(false);
+          const currentRecord = ref(null);
+          const scriptContent = ref("");
+          const activeTabKey = ref("1");
+          const scriptTreeData = ref([
             {
-              title: "姓名",
+              title: "存仓.lua",
+              key: "1",
+            },
+            {
+              title: "多任务模式.lua",
+              key: "2",
+            },
+            {
+              title: "琥珀实战任务.lua",
+              key: "3",
+            },
+            {
+              title: "开拍实行任务.lua",
+              key: "4",
+            },
+            {
+              title: "蓝色飞行变身任务.lua",
+              key: "5",
+            },
+            {
+              title: "蓝色猎骑变身任务.lua",
+              key: "6",
+            },
+            {
+              title: "全自动1-23级蓝色号角合成.lua",
+              key: "7",
+            },
+            {
+              title: "全自动1-23级蓝色号角1件蓝装.lua",
+              key: "8",
+            },
+            {
+              title: "全自动1-26级蓝色号角2件蓝装.lua",
+              key: "9",
+            },
+            {
+              title: "任务 成长之书.lua",
+              key: "10",
+            },
+            {
+              title: "委托任务.lua",
+              key: "11",
+            },
+            {
+              title: "委托任务 材料任务.lua",
+              key: "12",
+            },
+            {
+              title: "小退 卡号黑屏专用.lua",
+              key: "13",
+            },
+            {
+              title: "支线任务.lua",
+              key: "14",
+            },
+            {
+              title: "主线任务.lua",
+              key: "15",
+            },
+          ]);
+
+          const onExpand = (expanded, record) => {
+            if (expanded) {
+              expandedRowKeys.value = [...expandedRowKeys.value, record.key];
+            } else {
+              expandedRowKeys.value = expandedRowKeys.value.filter(
+                (key) => key !== record.key
+              );
+            }
+          };
+
+          const switchTab = (key) => {
+            activeTab.value = key;
+          };
+
+          onMounted(() => {
+            // 默认展开所有行
+            expandedRowKeys.value = dataSource.map((item) => item.key);
+          });
+
+          const updateLogs = [
+            {
+              date: "2025.03.10",
+              version: "2.0.0",
+              changes: ["版面优化，交互优化", "代码重构（可能有BUG）"],
+              status: "success",
+            },
+            {
+              date: "2025.03.05",
+              version: "1.1.2",
+              changes: ["增加神兵特效", "增加主界面显示特效"],
+              status: "processing",
+            },
+            {
+              date: "2025.02.28",
+              version: "1.1.1",
+              changes: [
+                "优化装备快速筛选功能",
+                "修复若干装备错误",
+                "增加图片分享功能演示视频",
+              ],
+              status: "processing",
+            },
+          ];
+
+          // 表格数据
+          const dataSource = reactive([
+            {
+              key: "1",
+              name: "Screen",
+              platform: "iOS",
+              version: "10.3.4.5654",
+              upgraded: 500,
+              creator: "Jack",
+              date: "2014-12-24 23:12:00",
+              action: "Publish",
+              description:
+                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
+              children: [
+                {
+                  key: "1-1",
+                  name: "Screen Detail",
+                  platform: "iOS",
+                  version: "10.3.4.5654",
+                  upgraded: 200,
+                  creator: "Jack",
+                  date: "2014-12-24 23:12:00",
+                  action: "View",
+                },
+              ],
+            },
+            {
+              key: "2",
+              name: "Screen",
+              platform: "iOS",
+              version: "10.3.4.5654",
+              upgraded: 500,
+              creator: "Jack",
+              date: "2014-12-24 23:12:00",
+              action: "Publish",
+              description:
+                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
+              children: [
+                {
+                  key: "2-1",
+                  name: "Screen Detail",
+                  platform: "iOS",
+                  version: "10.3.4.5654",
+                  upgraded: 200,
+                  creator: "Jack",
+                  date: "2014-12-24 23:12:00",
+                  action: "View",
+                },
+              ],
+            },
+            {
+              key: "3",
+              name: "Screen",
+              platform: "iOS",
+              version: "10.3.4.5654",
+              upgraded: 500,
+              creator: "Jack",
+              date: "2014-12-24 23:12:00",
+              action: "Publish",
+              description:
+                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
+              children: [
+                {
+                  key: "3-1",
+                  name: "Screen Detail",
+                  platform: "iOS",
+                  version: "10.3.4.5654",
+                  upgraded: 200,
+                  creator: "Jack",
+                  date: "2014-12-24 23:12:00",
+                  action: "View",
+                },
+              ],
+            },
+            {
+              key: "4",
+              name: "Screen",
+              platform: "iOS",
+              version: "10.3.4.5654",
+              upgraded: 500,
+              creator: "Jack",
+              date: "2014-12-24 23:12:00",
+              action: "Publish",
+              description:
+                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
+              children: [
+                {
+                  key: "4-1",
+                  name: "Screen Detail",
+                  platform: "iOS",
+                  version: "10.3.4.5654",
+                  upgraded: 200,
+                  creator: "Jack",
+                  date: "2014-12-24 23:12:00",
+                  action: "View",
+                },
+              ],
+            },
+            {
+              key: "5",
+              name: "Screen",
+              platform: "iOS",
+              version: "10.3.4.5654",
+              upgraded: 500,
+              creator: "Jack",
+              date: "2014-12-24 23:12:00",
+              action: "Publish",
+              description:
+                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
+              children: [
+                {
+                  key: "5-1",
+                  name: "Screen Detail",
+                  platform: "iOS",
+                  version: "10.3.4.5654",
+                  upgraded: 200,
+                  creator: "Jack",
+                  date: "2014-12-24 23:12:00",
+                  action: "View",
+                },
+              ],
+            },
+            {
+              key: "6",
+              name: "Screen",
+              platform: "iOS",
+              version: "10.3.4.5654",
+              upgraded: 500,
+              creator: "Jack",
+              date: "2014-12-24 23:12:00",
+              action: "Publish",
+              description:
+                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
+              children: [
+                {
+                  key: "6-1",
+                  name: "Screen Detail",
+                  platform: "iOS",
+                  version: "10.3.4.5654",
+                  upgraded: 200,
+                  creator: "Jack",
+                  date: "2014-12-24 23:12:00",
+                  action: "View",
+                },
+              ],
+            },
+            {
+              key: "7",
+              name: "Screen",
+              platform: "iOS",
+              version: "10.3.4.5654",
+              upgraded: 500,
+              creator: "Jack",
+              date: "2014-12-24 23:12:00",
+              action: "Publish",
+              description:
+                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
+              children: [
+                {
+                  key: "7-1",
+                  name: "Screen Detail",
+                  platform: "iOS",
+                  version: "10.3.4.5654",
+                  upgraded: 200,
+                  creator: "Jack",
+                  date: "2014-12-24 23:12:00",
+                  action: "View",
+                },
+              ],
+            },
+            {
+              key: "8",
+              name: "Screen",
+              platform: "iOS",
+              version: "10.3.4.5654",
+              upgraded: 500,
+              creator: "Jack",
+              date: "2014-12-24 23:12:00",
+              action: "Publish",
+              description:
+                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
+              children: [
+                {
+                  key: "8-1",
+                  name: "Screen Detail",
+                  platform: "iOS",
+                  version: "10.3.4.5654",
+                  upgraded: 200,
+                  creator: "Jack",
+                  date: "2014-12-24 23:12:00",
+                  action: "View",
+                },
+              ],
+            },
+            {
+              key: "9",
+              name: "Screen",
+              platform: "iOS",
+              version: "10.3.4.5654",
+              upgraded: 500,
+              creator: "Jack",
+              date: "2014-12-24 23:12:00",
+              action: "Publish",
+              description:
+                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
+              children: [
+                {
+                  key: "9-1",
+                  name: "Screen Detail",
+                  platform: "iOS",
+                  version: "10.3.4.5654",
+                  upgraded: 200,
+                  creator: "Jack",
+                  date: "2014-12-24 23:12:00",
+                  action: "View",
+                },
+              ],
+            },
+          ]);
+
+          // 表格列定义
+          const expandColumns = [
+            {
+              title: "Name",
               dataIndex: "name",
               key: "name",
             },
             {
-              title: "年龄",
-              dataIndex: "age",
-              key: "age",
+              title: "Platform",
+              dataIndex: "platform",
+              key: "platform",
             },
             {
-              title: "地址",
-              dataIndex: "address",
-              key: "address",
+              title: "Version",
+              dataIndex: "version",
+              key: "version",
             },
-          ];
-
-          const nestedColumns = [
             {
-              title: "日期",
+              title: "Upgraded",
+              dataIndex: "upgraded",
+              key: "upgraded",
+            },
+            {
+              title: "Creator",
+              dataIndex: "creator",
+              key: "creator",
+            },
+            {
+              title: "Date",
               dataIndex: "date",
               key: "date",
             },
             {
-              title: "详细信息",
-              dataIndex: "info",
-              key: "info",
+              title: "操作",
+              key: "action",
+              width: 100,
+              align: "center",
+              customRender: ({ record }) => {
+                return h(
+                  "a",
+                  {
+                    style: {
+                      color: "#1677FF",
+                      cursor: "pointer",
+                    },
+                    onClick: () => handlePublish(record),
+                  },
+                  "Publish"
+                );
+              },
             },
           ];
 
-          const data = [
-            {
-              key: 1,
-              name: "张三",
-              age: 32,
-              address: "北京市朝阳区",
-              children: [
-                {
-                  key: "1-1",
-                  date: "2024-03-12",
-                  info: "完成项目A的开发",
-                },
-                {
-                  key: "1-2",
-                  date: "2024-03-13",
-                  info: "参加技术评审会议",
-                },
-              ],
-            },
-            {
-              key: 2,
-              name: "李四",
-              age: 28,
-              address: "上海市浦东新区",
-              children: [
-                {
-                  key: "2-1",
-                  date: "2024-03-12",
-                  info: "完成需求分析",
-                },
-                {
-                  key: "2-2",
-                  date: "2024-03-13",
-                  info: "开始功能测试",
-                },
-              ],
-            },
-          ];
+          // 初始化数据
+          dataSource.forEach((item) => {
+            item.expanded = false;
+          });
 
+          const textContent = ref("");
+
+          const fileInput = ref(null);
+
+          // 触发文件选择
+          const triggerFileInput = () => {
+            // 确保 DOM 已经挂载
+            nextTick(() => {
+              if (fileInput.value) {
+                fileInput.value.click();
+              }
+            });
+          };
+
+          // 处理文件选择变化
+          const handleFileChange = (event) => {
+            const file = event.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                textContent.value = e.target.result;
+                message.success("文本加载成功");
+              };
+              reader.onerror = () => {
+                message.error("文件读取失败");
+              };
+              reader.readAsText(file, "UTF-8");
+              // 清空文件输入框的值，这样可以重复选择同一个文件
+              event.target.value = "";
+            }
+          };
+
+          const handleLoadText = () => {
+            console.log("读取文本");
+            message.success("文本加载成功");
+            textContent.value =
+              "这是从文件中读取的示例文本内容。\n可以在这里显示txt文件的内容。";
+          };
+
+          const handleClearText = () => {
+            console.log("清空文本");
+            textContent.value = "";
+            message.info("文本已清空");
+          };
+
+          const handleBackup = () => {
+            console.log("备份数据");
+            message.success("数据已备份");
+          };
+
+          const handleImport = () => {
+            console.log("导入备份");
+            message.success("备份已导入");
+          };
+
+          const handlePublish = (record) => {
+            currentRecord.value = record;
+            isModalVisible.value = true;
+          };
+
+          const handleModalOk = () => {
+            message.success(`发布数据成功`);
+            isModalVisible.value = false;
+          };
+
+          const handleModalCancel = () => {
+            isModalVisible.value = false;
+          };
+
+          const handleAdd = () => {
+            const newKey = (dataSource.length + 1).toString();
+            const newRecord = {
+              key: newKey,
+              name: username.value || "New User",
+              platform: "iOS",
+              version: "10.3.4.5654",
+              upgraded: 500,
+              creator: "Jack",
+              date: "2014-12-24 23:12:00",
+              action: "Publish",
+              description:
+                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
+              children: [
+                {
+                  key: `${newKey}-1`,
+                  name: "Screen Detail",
+                  platform: "iOS",
+                  version: "10.3.4.5654",
+                  upgraded: 200,
+                  creator: "Jack",
+                  date: "2014-12-24 23:12:00",
+                  action: "View",
+                },
+              ],
+            };
+            dataSource.push(newRecord);
+            message.success("添加成功");
+            // 清空输入框
+            username.value = "";
+            password.value = "";
+          };
+
+          const scriptFileInput = ref(null);
+          const selectedFileName = ref("");
+
+          const openScriptFile = () => {
+            scriptFileInput.value.click();
+          };
+
+          const handleScriptFileChange = (event) => {
+            const file = event.target.files[0];
+            if (file) {
+              selectedFileName.value = file.name;
+              message.success(`已选择文件: ${file.name}`);
+            }
+            // 清空文件输入以允许选择相同文件
+            event.target.value = "";
+          };
+
+          const selectedScriptKeys = ref([]);
+
+          const handleNewScript = () => {
+            // 弹出输入框让用户输入脚本名称
+            Modal.confirm({
+              title: "新建脚本文件",
+              content: h("div", {}, [
+                h("p", "请输入脚本文件名:"),
+                h(Input, {
+                  value: scriptNameInput.value,
+                  onChange: (e) => (scriptNameInput.value = e.target.value),
+                  placeholder: "例如: 新脚本.lua",
+                }),
+              ]),
+              onOk() {
+                if (!scriptNameInput.value) {
+                  message.error("请输入脚本文件名");
+                  return;
+                }
+                // 添加新脚本到列表
+                const newScript = {
+                  title: scriptNameInput.value.endsWith(".lua")
+                    ? scriptNameInput.value
+                    : scriptNameInput.value + ".lua",
+                  key: (scriptTreeData.value.length + 1).toString(),
+                };
+                scriptTreeData.value.push(newScript);
+                message.success("新建脚本成功");
+                scriptNameInput.value = ""; // 清空输入
+              },
+            });
+          };
+
+          const handleDeleteScript = () => {
+            if (!selectedScriptKeys.value.length) {
+              message.warning("请先选择要删除的脚本");
+              return;
+            }
+            Modal.confirm({
+              title: "确认删除",
+              content: "确定要删除选中的脚本吗？此操作不可恢复。",
+              okText: "确认",
+              cancelText: "取消",
+              onOk() {
+                // 从列表中删除选中的脚本
+                scriptTreeData.value = scriptTreeData.value.filter(
+                  (item) => !selectedScriptKeys.value.includes(item.key)
+                );
+                selectedScriptKeys.value = []; // 清空选中
+                message.success("删除脚本成功");
+              },
+            });
+          };
+
+          const handleRunScript = () => {
+            if (!selectedScriptKeys.value.length) {
+              message.warning("请先选择要运行的脚本");
+              return;
+            }
+            // 获取选中的脚本名称
+            const selectedScript = scriptTreeData.value.find(
+              (item) => item.key === selectedScriptKeys.value[0]
+            );
+            message.success(`正在运行脚本: ${selectedScript.title}`);
+          };
+
+          const scriptNameInput = ref("");
+
+          const handleStart = () => {
+            message.success("启动成功");
+          };
+
+          const handleStop = () => {
+            message.success("已停止");
+          };
+
+          // 在setup函数中添加新的ref变量
+          const settingsContent = ref("");
+          const huntingContent = ref("");
+          const protectContent = ref("");
+          const teamContent = ref("");
+          const itemContent = ref("");
+          const recordContent = ref("");
+
+          // 返回模板需要使用的数据和方法
           return {
-            columns,
-            nestedColumns,
-            data,
+            activeTab,
+            switchTab,
+            onlineUsers,
+            updateLogs,
+            dataSource,
+            expandColumns,
+            defaultRole,
+            defaultRole2,
+            username,
+            password,
+            handlePublish,
+            handleAdd,
+            handleBackup,
+            handleImport,
+            handleLoadText,
+            handleClearText,
+            textContent,
+            fileInput,
+            triggerFileInput,
+            handleFileChange,
+            expandedRowKeys,
+            onExpand,
+            icons,
+            iconsLoaded,
+            isModalVisible,
+            currentRecord,
+            handleModalOk,
+            handleModalCancel,
+            scriptContent,
+            scriptFileInput,
+            selectedFileName,
+            openScriptFile,
+            handleScriptFileChange,
+            activeTabKey,
+            scriptTreeData,
+            selectedScriptKeys,
+            handleNewScript,
+            handleDeleteScript,
+            handleRunScript,
+            scriptNameInput,
+            handleStart,
+            handleStop,
+            settingsContent,
+            huntingContent,
+            protectContent,
+            teamContent,
+            itemContent,
+            recordContent,
           };
         },
       });
 
-      app.use(window.antd);
+      app.use(Layout);
+      app.use(Card);
+      app.use(Timeline);
+      app.use(Row);
+      app.use(Col);
+      app.use(Table);
+      app.use(Form);
+      app.use(Select);
+      app.use(Divider);
+      app.use(Input);
+      app.use(Button);
+      app.use(message);
+      app.use(Modal);
+      app.use(Tabs);
+      app.use(TabPane);
+      app.use(Tree);
+
       app.mount("#app");
     </script>
   </body>
