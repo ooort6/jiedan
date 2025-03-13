@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>プロフィール - AREA X</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    body {
+      background: url(../assest/p8/246056115c814344088715147bf0e44a.jpeg) no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .popup {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 20px 15px;
+      height: 90vh;
+      overflow-y: auto;
+      z-index: 1000;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .close-btn {
+      width: 24px;
+      height: 24px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .profile-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .profile-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-name {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .level-tag {
+      background: linear-gradient(90deg, #FFB800 0%, #FFDE00 100%);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 12px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .level-tag img {
+      width: 20px;
+      height: 12px;
+    }
+
+    .copy-icon {
+      width: 16px;
+      height: 16px;
+      margin-left: 4px;
+      cursor: pointer;
+    }
+
+    .profile-id {
+      font-size: 14px;
+      color: #999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: space-between;
+    }
+
+    .id-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .not-id {
+      color: #333;
+      text-decoration: none;
+      margin-left: auto;
+    }
+
+    .connect-section {
+      margin-top: 30px;
+    }
+
+    .connect-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .connect-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .connect-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      padding: 15px;
+      border: 1px solid #eee;
+      border-radius: 12px;
+    }
+
+    .connect-icon {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .connect-name {
+      font-size: 12px;
+      color: #333;
+    }
+
+    .share-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20%;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+
+    .share-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+
+    /* 底部导航 */
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      background: #fff;
+      border-top: 1px solid #eee;
+      z-index: 1001;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      color: #666;
+      font-size: 12px;
+    }
+
+    .nav-item img {
+      width: 24px;
+      height: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="popup">
+    <div class="popup-header">
+      <button class="close-btn">×</button>
+    </div>
+
+    <div class="profile-section">
+      <img src="../assest/p10/98c5ecc91ee82ad3d9ca76706a7caa8b.png" alt="Avatar" class="profile-avatar" />
+      <div class="profile-info">
+        <div class="profile-name">
+          尹原 悠真
+          <span class="level-tag">
+            <img src="../assest/p10/Group 39.png" alt="Star" />
+          
+          </span>
+        </div>
+        <div class="profile-id">
+          <div class="id-left">
+            ID：G28I456BZ
+            <img src="../assest/p10/Frame 14.png" alt="Copy" class="copy-icon" />
+          </div>
+          <span class="not-id">Not my ID?</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="connect-section">
+      <h2 class="connect-title">連携</h2>
+      <div class="connect-grid">
+        <a href="#" class="connect-item">
+          <img src="../assest/p10/line-f707970d 1.png" alt="Line" class="connect-icon" />
+          <span class="connect-name">line</span>
+        </a>
+        <a href="#" class="connect-item">
+          <img src="../assest/p10/discord-1936796d 2.png" alt="Discord" class="connect-icon" />
+          <span class="connect-name">Discord</span>
+        </a>
+        <a href="#" class="connect-item">
+          <img src="../assest/p10/whatsapp-a470325f 1.png" alt="Whatsapp" class="connect-icon" />
+          <span class="connect-name">Whatsapp</span>
+        </a>
+        <a href="#" class="connect-item">
+          <img src="../assest/p10/google-4e002250 1.png" alt="Google" class="connect-icon" />
+          <span class="connect-name">Google</span>
+        </a>
+        <a href="#" class="connect-item">
+          <img src="../assest/p10/apple-773b83bc 1.png" alt="Apple" class="connect-icon" />
+          <span class="connect-name">Apple</span>
+        </a>
+        <a href="#" class="connect-item">
+          <img src="../assest/p10/x-8c88186b 1.png" alt="X" class="connect-icon" />
+          <span class="connect-name">X</span>
+        </a>
+      </div>
+
+      <button class="share-btn">
+        <img src="../assest/p10/mobile-download-line 1.png" alt="Share" class="share-icon" />
+      
+      </button>
+    </div>
+  </div>
+
+  <!-- 底部导航 -->
+  <div class="bottom-nav">
+    <a href="#" class="nav-item">
+      <img src="../assest/p10/Frame 14.png" alt="Game" />
+      <span>ゲーム</span>
+    </a>
+    <a href="#" class="nav-item">
+      <img src="../assest/p10/Group 39.png" alt="Support" />
+      <span>お問合せ</span>
+    </a>
+    <a href="#" class="nav-item">
+      <img src="../assest/p10/close.png" alt="Settings" />
+      <span>設定</span>
+    </a>
+  </div>
+</body>
+</html> 

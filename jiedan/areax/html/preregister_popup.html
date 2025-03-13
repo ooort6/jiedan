@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>事前登録 - AREA X</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    body {
+      background: url(../assest/p8/246056115c814344088715147bf0e44a.jpeg) no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .popup {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 20px 15px;
+      height: 90vh;
+      overflow-y: auto;
+      z-index: 1000;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .popup-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .close-btn {
+      width: 24px;
+      height: 24px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    /* 游戏列表 */
+    .game-list {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .game-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .game-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .game-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .game-name {
+      font-size: 12px;
+      color: #333;
+      text-align: center;
+      max-width: 80px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .register-btn {
+      background: #FFE11C;
+      border: none;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    /* 推荐游戏 */
+    .recommend-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    .recommend-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .recommend-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .recommend-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .recommend-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .recommend-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .recommend-name {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .new-tag {
+      background: #FFE11C;
+      color: #333;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .recommend-desc {
+      font-size: 12px;
+      color: #999;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .start-btn {
+      background: #F5F5F5;
+      border: none;
+      padding: 4px 16px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
+      color: #333;
+    }
+
+    /* 底部导航 */
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      background: #fff;
+      border-top: 1px solid #eee;
+      z-index: 1001;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      color: #666;
+      font-size: 12px;
+    }
+
+    .nav-item img {
+      width: 24px;
+      height: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="popup">
+    <div class="popup-header">
+      <h1 class="popup-title">事前登録</h1>
+      <button class="close-btn">×</button>
+    </div>
+
+    <!-- 游戏列表 -->
+    <div class="game-list">
+      <a href="#" class="game-item">
+        <img src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png" alt="Game" class="game-icon" />
+        <span class="game-name">ビビッドアーミー</span>
+        <button class="register-btn">事前登録</button>
+      </a>
+      <a href="#" class="game-item">
+        <img src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png" alt="Game" class="game-icon" />
+        <span class="game-name">蜘蛛ですが、なにか</span>
+        <button class="register-btn">事前登録</button>
+      </a>
+      <a href="#" class="game-item">
+        <img src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png" alt="Game" class="game-icon" />
+        <span class="game-name">魔法先生ネギま！</span>
+        <button class="register-btn">事前登録</button>
+      </a>
+      <a href="#" class="game-item">
+        <img src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png" alt="Game" class="game-icon" />
+        <span class="game-name">ありふれた職業で世界最強</span>
+        <button class="register-btn">事前登録</button>
+      </a>
+    </div>
+
+    <!-- 推荐游戏 -->
+    <div class="recommend-section">
+      <h2 class="recommend-title">おすすめゲーム</h2>
+      <div class="recommend-list">
+        <a href="#" class="recommend-item">
+          <img src="../assest/p9/ded6f29a922de029dc68e7646a79d281.png" alt="Game" class="recommend-icon" />
+          <div class="recommend-info">
+            <div class="recommend-text">
+              <div class="recommend-name">
+                <span class="new-tag">New</span>
+                ビビッドアーミー
+              </div>
+              <div class="recommend-desc">育成がカギを握る少女戦略ゲーム</div>
+            </div>
+            <button class="start-btn">Start</button>
+          </div>
+        </a>
+
+        <a href="#" class="recommend-item">
+          <img src="../assest/p9/40990c4c5c8b06b34273f24ce47c0f32.png" alt="Game" class="recommend-icon" />
+          <div class="recommend-info">
+            <div class="recommend-text">
+              <div class="recommend-name">
+                <span class="new-tag">New</span>
+                蜘蛛ですが、なにか
+              </div>
+              <div class="recommend-desc">迷宮サバイバルファンタジー開幕</div>
+            </div>
+            <button class="start-btn">Start</button>
+          </div>
+        </a>
+
+        <a href="#" class="recommend-item">
+          <img src="../assest/p9/75426ab2eb33eddd1363afc61bf1f943.png" alt="Game" class="recommend-icon" />
+          <div class="recommend-info">
+            <div class="recommend-text">
+              <div class="recommend-name">
+                <span class="new-tag">New</span>
+                魔法先生ネギま！
+              </div>
+              <div class="recommend-desc">わずかな勇気が本当の魔法</div>
+            </div>
+            <button class="start-btn">Start</button>
+          </div>
+        </a>
+
+        <a href="#" class="recommend-item">
+          <img src="../assest/p9/39bbb00a82b24c419fc99c230aba3342.png" alt="Game" class="recommend-icon" />
+          <div class="recommend-info">
+            <div class="recommend-text">
+              <div class="recommend-name">
+                <span class="new-tag">New</span>
+                ありふれた職業で世界最強
+              </div>
+              <div class="recommend-desc">この錬成師、世界最強。</div>
+            </div>
+            <button class="start-btn">Start</button>
+          </div>
+        </a>
+
+        <a href="#" class="recommend-item">
+          <img src="../assest/p9/ded6f29a922de029dc68e7646a79d281.png" alt="Game" class="recommend-icon" />
+          <div class="recommend-info">
+            <div class="recommend-text">
+              <div class="recommend-name">
+                <span class="new-tag">New</span>
+                クイーンズブレイド
+              </div>
+              <div class="recommend-desc">100名以上の美闘士と戦うRPG</div>
+            </div>
+            <button class="start-btn">Start</button>
+          </div>
+        </a>
+
+        <a href="#" class="recommend-item">
+          <img src="../assest/p9/40990c4c5c8b06b34273f24ce47c0f32.png" alt="Game" class="recommend-icon" />
+          <div class="recommend-info">
+            <div class="recommend-text">
+              <div class="recommend-name">
+                <span class="new-tag">New</span>
+                月が導く異世界道中
+              </div>
+              <div class="recommend-desc">異世界世直しシステムファンタジー</div>
+            </div>
+            <button class="start-btn">Start</button>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部导航 -->
+  <div class="bottom-nav">
+    <a href="#" class="nav-item">
+      <img src="../assest/p9/推荐icon.png" alt="Game" />
+      <span>ゲーム</span>
+    </a>
+    <a href="#" class="nav-item">
+      <img src="../assest/p9/Union.png" alt="Support" />
+      <span>お問合せ</span>
+    </a>
+    <a href="#" class="nav-item">
+      <img src="../assest/p9/Frame 4.png" alt="Settings" />
+      <span>設定</span>
+    </a>
+  </div>
+</body>
+</html> 

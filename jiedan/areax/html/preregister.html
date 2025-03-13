@@ -381,27 +381,39 @@
       .news-content {
         flex: 1;
         min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .news-title-wrapper {
+        position: relative;
+        margin-bottom: 6px;
       }
 
       .news-tag {
-        display: inline-block;
+        position: absolute;
+        left: 0;
+        top: 0;
         background: #FFE11C;
         color: #333;
         font-size: 12px;
         padding: 2px 6px;
         border-radius: 4px;
-        margin-bottom: 6px;
+        z-index: 1;
       }
 
       .news-headline {
         font-size: 14px;
         color: #333;
         line-height: 1.4;
-        margin-bottom: 6px;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        padding-left: 50px;
       }
 
       .news-meta {
@@ -612,8 +624,10 @@
         <div class="news-list">
           <a href="#" class="news-item">
             <div class="news-content">
-              <span class="news-tag">New</span>
-              <div class="news-headline">「蜘蛛ですが、なにか？」ボイス実装！「私」役 ...</div>
+              <div class="news-title-wrapper">
+                <span class="news-tag">New</span>
+                <span class="news-headline">「蜘蛛ですが、なにか？」ボイス実装！「私」役 ...</span>
+              </div>
               <div class="news-meta">
                 <div class="news-source">
                   <img src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png" alt="source" />
@@ -627,8 +641,10 @@
 
           <a href="#" class="news-item">
             <div class="news-content">
-              <span class="news-tag">New</span>
-              <div class="news-headline">「スライム倒して300年、知らないうちにレベルMAXになってました」</div>
+              <div class="news-title-wrapper">
+                <span class="news-tag">New</span>
+                <span class="news-headline">「スライム倒して300年、知らないうちにレベルMAXになってました」</span>
+              </div>
               <div class="news-meta">
                 <div class="news-source">
                   <img src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png" alt="source" />
@@ -642,8 +658,10 @@
 
           <a href="#" class="news-item">
             <div class="news-content">
-              <span class="news-tag">New</span>
-              <div class="news-headline">「暗殺者である俺のステータスが勇者よりも明らかに強いのだが...」</div>
+              <div class="news-title-wrapper">
+                <span class="news-tag">New</span>
+                <span class="news-headline">「暗殺者である俺のステータスが勇者よりも明らかに強いのだが...」</span>
+              </div>
               <div class="news-meta">
                 <div class="news-source">
                   <img src="../assest/p3/5697dbcd9921065acb502eef7a46cd0f.png" alt="source" />
