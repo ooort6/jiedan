@@ -57,7 +57,7 @@
         padding: 0;
         margin-bottom: 20px;
         position: relative;
-        background: #F6F6F6;
+        background: #f6f6f6;
       }
 
       .banner .swiper {
@@ -83,7 +83,7 @@
 
       .banner .swiper-slide img {
         width: 100%;
-        aspect-ratio: 16/9;
+        height: 160px;
         object-fit: cover;
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -134,43 +134,53 @@
       }
 
       .section-more {
-        color: #007AFF;
+        color: #007aff;
         font-size: 14px;
         text-decoration: none;
       }
 
-      .game-list {
-        display: flex;
-        gap: 12px;
+      .game-scroll-container {
         overflow-x: auto;
-        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
         -ms-overflow-style: none;
+        padding: 0;
+        margin: 0 -15px 0 0;
       }
 
-      .game-list::-webkit-scrollbar {
+      .game-scroll-container::-webkit-scrollbar {
         display: none;
       }
 
+      .game-grid {
+        display: grid;
+        grid-template-rows: repeat(2, auto);
+        grid-auto-flow: column;
+        gap: 15px 12px;
+        padding: 0 15px 4px 0;
+        width: fit-content;
+      }
+
       .game-item {
-        flex: 0 0 auto;
         width: 160px;
+        text-align: left;
       }
 
       .game-cover {
         width: 160px;
         height: 90px;
-        border-radius: 12px;
+        border-radius: 8px;
         margin-bottom: 8px;
+        object-fit: cover;
       }
 
       .game-name {
         font-size: 14px;
-        font-weight: bold;
-        margin-bottom: 4px;
+        color: #333;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        padding: 0;
       }
 
       .game-desc {
@@ -221,15 +231,298 @@
       .nav-item.active {
         color: #333;
       }
+
+      @media (max-width: 480px) {
+        .game-item {
+          width: 140px;
+        }
+
+        .game-cover {
+          width: 140px;
+          height: 79px;
+        }
+
+        .game-name {
+          font-size: 12px;
+        }
+      }
+
+      /* 推荐游戏板块 */
+      .recommend-section {
+        padding: 20px 15px;
+      }
+
+      .recommend-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .recommend-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .recommend-more {
+        color: #007aff;
+        font-size: 14px;
+        text-decoration: none;
+      }
+
+      .recommend-list {
+        display: flex;
+        gap: 15px;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        scroll-snap-type: x mandatory;
+      }
+
+      .recommend-list::-webkit-scrollbar {
+        display: none;
+      }
+
+      .recommend-group {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        flex-shrink: 0;
+        scroll-snap-align: start;
+      }
+
+      .recommend-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .recommend-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+
+      .rank-number {
+        position: absolute;
+        left: 1px;
+        top: -1px;
+        width: 16px;
+        height: 16px;
+        background: #b4b4b4;
+        clip-path: polygon(
+          50% 0%,
+          100% 25%,
+          100% 75%,
+          50% 100%,
+          0% 75%,
+          0% 25%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 12px;
+        color: #fff;
+        z-index: 1;
+      }
+
+      .rank-number.top1 {
+        background: #ffb800;
+      }
+      .rank-number.top2 {
+        background: #b4b4b4;
+      }
+      .rank-number.top3 {
+        background: #d0964c;
+      }
+
+      .recommend-info {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .recommend-text {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .recommend-name {
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .recommend-desc {
+        font-size: 12px;
+        color: #999;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .start-btn {
+        background: #ffe11c;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: bold;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+
+      /* 新作游戏部分 */
+      .game-list {
+        display: flex;
+        overflow-x: auto;
+        gap: 12px;
+        padding: 0 15px;
+        margin: 0 -15px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+
+      .game-list::-webkit-scrollbar {
+        display: none;
+      }
+
+      .game-list .game-item {
+        position: relative;
+        width: 88%;
+        height: 160px;
+        flex-shrink: 0;
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .game-list .game-cover {
+        width: 100%;
+        height: 100%;
+        border-radius: 12px;
+        margin-bottom: 0;
+        object-fit: cover;
+      }
+
+      .game-list .game-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 12px;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.8) 40%,
+          rgba(0, 0, 0, 0) 100%
+        );
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .game-list .game-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .game-list .game-content {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .game-list .game-name {
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 4px;
+      }
+
+      .game-list .game-desc {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 12px;
+        margin-bottom: 0;
+      }
+
+      .game-list .start-btn {
+        position: absolute;
+        right: 12px;
+        bottom: 12px;
+        padding: 6px 20px;
+        background: #fff;
+        color: #333;
+        border-radius: 100px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.2s;
+      }
+
+      .game-list .start-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      @media (max-width: 480px) {
+        .banner .swiper-slide img {
+          height: 140px;
+        }
+
+        .game-list .game-item {
+          height: 140px;
+        }
+
+        .game-list .game-icon {
+          width: 40px;
+          height: 40px;
+        }
+
+        .game-list .game-name {
+          font-size: 14px;
+        }
+
+        .game-list .game-desc {
+          font-size: 12px;
+        }
+
+        .game-list .start-btn {
+          padding: 4px 16px;
+          font-size: 13px;
+        }
+      }
     </style>
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
   </head>
   <body>
     <div class="container">
       <!-- 顶部导航 -->
       <div class="header">
         <div class="header-title">ゲームショップ</div>
-        <img src="../assest/p2/Search - Iconly Pro.png" alt="search" class="search-icon" />
+        <img
+          src="../assest/p2/Search - Iconly Pro.png"
+          alt="search"
+          class="search-icon"
+        />
       </div>
 
       <!-- Banner部分 -->
@@ -237,13 +530,22 @@
         <div class="swiper">
           <div class="swiper-wrapper">
             <div class="swiper-slide">
-              <img src="../assest/p3/8b101b84d905c236779e31d1172ce107.png" alt="魔法先生ネギま！" />
+              <img
+                src="../assest/p3/8b101b84d905c236779e31d1172ce107.png"
+                alt="魔法先生ネギま！"
+              />
             </div>
             <div class="swiper-slide">
-              <img src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png" alt="ビビッドアーミー" />
+              <img
+                src="../assest/p3/9695873fab5bd6228abe794c9304b282.png"
+                alt="ビビッドアーミー"
+              />
             </div>
             <div class="swiper-slide">
-              <img src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png" alt="ありふれた職業で" />
+              <img
+                src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png"
+                alt="ありふれた職業で"
+              />
             </div>
           </div>
         </div>
@@ -257,101 +559,106 @@
             人気ゲーム
           </div>
         </div>
-        <div class="game-list">
-          <div class="game-item">
-            <img src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png" alt="Game" class="game-cover" />
-            <div class="game-name">魔法先生ネギま！</div>
-           
-          </div>
-          <div class="game-item">
-            <img src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png" alt="Game" class="game-cover" />
-            <div class="game-name">ビビッドアーミー</div>
-           
-          </div>
-          <div class="game-item">
-            <img src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png" alt="Game" class="game-cover" />
-            <div class="game-name">ありふれた職業で世界最強</div>
-           
-          </div>
-        </div>
-         <div class="game-list">
-          <div class="game-item">
-            <img src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png" alt="Game" class="game-cover" />
-            <div class="game-name">魔法先生ネギま！</div>
-            
-          </div>
-          <div class="game-item">
-            <img src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png" alt="Game" class="game-cover" />
-            <div class="game-name">ビビッドアーミー</div>
-           
-          </div>
-          <div class="game-item">
-            <img src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png" alt="Game" class="game-cover" />
-            <div class="game-name">ありふれた職業で世界最強</div>
-           
-          </div>
-        </div>
-      </div>
-      
-        
-
-      <!-- 推荐游戏 -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-title">
-            <img src="../assest/p2/推荐icon.png" alt="recommend" />
-            おすすめゲーム
-          </div>
-          <a href="#" class="section-more">More ></a>
-        </div>
-        <div class="game-list">
-          <div class="game-item">
-            <img src="../assest/p2/game1.png" alt="Game" class="game-cover" />
-            <div class="game-name">アークナイツ</div>
-            <div class="game-desc">明日方舟 - 感染者と非感染者の戦い</div>
-            <div class="game-tag">戦略</div>
-          </div>
-          <div class="game-item">
-            <img src="../assest/p2/game2.png" alt="Game" class="game-cover" />
-            <div class="game-name">原神</div>
-            <div class="game-desc">冒険者よ、テイワットへようこそ</div>
-            <div class="game-tag">RPG</div>
-          </div>
-          <div class="game-item">
-            <img src="../assest/p2/game3.png" alt="Game" class="game-cover" />
-            <div class="game-name">ブルーアーカイブ</div>
-            <div class="game-desc">新たな物語が始まる学園戦略RPG</div>
-            <div class="game-tag">RPG</div>
-          </div>
-          <div class="game-item">
-            <img src="../assest/p2/game4.png" alt="Game" class="game-cover" />
-            <div class="game-name">ウマ娘</div>
-            <div class="game-desc">プリティーダービー - 夢の続きを、走れ！</div>
-            <div class="game-tag">育成</div>
-          </div>
-          <div class="game-item">
-            <img src="../assest/p2/game5.png" alt="Game" class="game-cover" />
-            <div class="game-name">アズールレーン</div>
-            <div class="game-desc">碧蓝航线 - 今日も愛で戦う艦隊育成</div>
-            <div class="game-tag">シューティング</div>
-          </div>
-          <div class="game-item">
-            <img src="../assest/p2/game6.png" alt="Game" class="game-cover" />
-            <div class="game-name">プリコネR</div>
-            <div class="game-desc">プリンセスコネクト！Re:Dive</div>
-            <div class="game-tag">RPG</div>
-          </div>
-          <div class="game-item">
-            <img src="../assest/p2/game7.png" alt="Game" class="game-cover" />
-            <div class="game-name">崩壊：スターレイル</div>
-            <div class="game-desc">銀河鉄道の夢、今ここに</div>
-            <div class="game-tag">RPG</div>
-          </div>
-          <div class="game-item">
-            <img src="../assest/p2/game8.png" alt="Game" class="game-cover" />
-            <div class="game-name">FGO</div>
-            <div class="game-desc">Fate/Grand Order - 運命の夜に出会って</div>
-            <div class="game-tag">RPG</div>
+        <div class="game-scroll-container">
+          <div class="game-grid">
+            <!-- 第一行 -->
+            <div class="game-item">
+              <img
+                src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png"
+                alt="Game"
+                class="game-cover"
+              />
+              <div class="game-name">魔法先生ネギま！</div>
+            </div>
+            <div class="game-item">
+              <img
+                src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png"
+                alt="Game"
+                class="game-cover"
+              />
+              <div class="game-name">ビビッドアーミー</div>
+            </div>
+            <div class="game-item">
+              <img
+                src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png"
+                alt="Game"
+                class="game-cover"
+              />
+              <div class="game-name">ありふれた職業で世界最強</div>
+            </div>
+            <div class="game-item">
+              <img
+                src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png"
+                alt="Game"
+                class="game-cover"
+              />
+              <div class="game-name">魔法先生ネギま！</div>
+            </div>
+            <div class="game-item">
+              <img
+                src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png"
+                alt="Game"
+                class="game-cover"
+              />
+              <div class="game-name">ビビッドアーミー</div>
+            </div>
+            <div class="game-item">
+              <img
+                src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png"
+                alt="Game"
+                class="game-cover"
+              />
+              <div class="game-name">ありふれた職業で世界最強</div>
+            </div>
+            <!-- 第二行 -->
+            <div class="game-item">
+              <img
+                src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png"
+                alt="Game"
+                class="game-cover"
+              />
+              <div class="game-name">魔法先生ネギま！</div>
+            </div>
+            <div class="game-item">
+              <img
+                src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png"
+                alt="Game"
+                class="game-cover"
+              />
+              <div class="game-name">ビビッドアーミー</div>
+            </div>
+            <div class="game-item">
+              <img
+                src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png"
+                alt="Game"
+                class="game-cover"
+              />
+              <div class="game-name">ありふれた職業で世界最強</div>
+            </div>
+            <div class="game-item">
+              <img
+                src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png"
+                alt="Game"
+                class="game-cover"
+              />
+              <div class="game-name">魔法先生ネギま！</div>
+            </div>
+            <div class="game-item">
+              <img
+                src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png"
+                alt="Game"
+                class="game-cover"
+              />
+              <div class="game-name">ビビッドアーミー</div>
+            </div>
+            <div class="game-item">
+              <img
+                src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png"
+                alt="Game"
+                class="game-cover"
+              />
+              <div class="game-name">ありふれた職業で世界最強</div>
+            </div>
           </div>
         </div>
       </div>
@@ -360,33 +667,249 @@
       <div class="section">
         <div class="section-header">
           <div class="section-title">
-            <img src="../assest/p3/新作游戏 1.png" alt="new" />
+            <img src="../assest/p2/火箭 1.png" alt="new" />
             新作ゲーム
           </div>
           <a href="#" class="section-more">More ></a>
         </div>
         <div class="game-list">
           <div class="game-item">
-            <img src="../assest/p3/5697dbcd9921065acb502eef7a46cd0f.png" alt="Game" class="game-cover" />
-            <div class="game-name">KING OF PRISM 煌</div>
-            <div class="game-desc">星光王子的闪耀光辉，永远在你...</div>
-            <div class="game-tag">RPG</div>
+            <img
+              src="../assest/p2/705a3d799feb44d0a3c48b7663bb9a24.png"
+              alt="Game"
+              class="game-cover"
+            />
+            <div class="game-info">
+              <img
+                src="../assest/p3/5697dbcd9921065acb502eef7a46cd0f.png"
+                alt="Game"
+                class="game-icon"
+              />
+              <div class="game-content">
+                <div class="game-name">KING OF PRISM 煌</div>
+                <div class="game-desc">星光王子的闪耀光辉，永远在你...</div>
+              </div>
+              <div class="start-btn">Start</div>
+            </div>
           </div>
           <div class="game-item">
-            <img src="../assest/p3/8b101b84d905c236779e31d1172ce107.png" alt="Game" class="game-cover" />
-            <div class="game-name">蜘蛛ですが、なにか？</div>
-            <div class="game-desc">迷宮サバイバルファンタジー</div>
-            <div class="game-tag">RPG</div>
+            <img
+              src="../assest/p3/8b101b84d905c236779e31d1172ce107.png"
+              alt="Game"
+              class="game-cover"
+            />
+            <div class="game-info">
+              <img
+                src="../assest/p3/8b101b84d905c236779e31d1172ce107.png"
+                alt="Game"
+                class="game-icon"
+              />
+              <div class="game-content">
+                <div class="game-name">蜘蛛ですが、なにか？</div>
+                <div class="game-desc">迷宮サバイバルファンタジー</div>
+              </div>
+              <div class="start-btn">Start</div>
+            </div>
           </div>
           <div class="game-item">
-            <img src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png" alt="Game" class="game-cover" />
-            <div class="game-name">魔法陣グルグル</div>
-            <div class="game-desc">絵本のような可愛い世界を冒険！</div>
-            <div class="game-tag">アドベンチャー</div>
+            <img
+              src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png"
+              alt="Game"
+              class="game-cover"
+            />
+            <div class="game-info">
+              <img
+                src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png"
+                alt="Game"
+                class="game-icon"
+              />
+              <div class="game-content">
+                <div class="game-name">魔法陣グルグル</div>
+                <div class="game-desc">絵本のような可愛い世界を冒険！</div>
+              </div>
+              <div class="start-btn">Start</div>
+            </div>
           </div>
         </div>
       </div>
+      <!-- 排行榜板块 -->
+      <div class="recommend-section">
+        <div class="recommend-header">
+          <div class="recommend-title">
+            <img
+              src="../assest/p2/排行榜icon.png"
+              alt="recommend"
+              style="
+                width: 20px;
+                height: 20px;
+                margin-right: 8px;
+                vertical-align: middle;
+              "
+            />
+            ランキング
+          </div>
+          <a href="#" class="recommend-more">More ></a>
+        </div>
+        <div class="recommend-list">
+          <div class="recommend-group">
+            <div class="recommend-item">
+              <div class="rank-number top1">1</div>
+              <img
+                src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png"
+                alt="Game"
+                class="recommend-icon"
+              />
+              <div class="recommend-info">
+                <div class="recommend-text">
+                  <div class="recommend-name">銀河英雄伝説 戦いの輪舞...</div>
+                  <div class="recommend-desc">銀河の歴史が、また1ページ</div>
+                </div>
+                <button class="start-btn">Start</button>
+              </div>
+            </div>
 
+            <div class="recommend-item">
+              <div class="rank-number top2">2</div>
+              <img
+                src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png"
+                alt="Game"
+                class="recommend-icon"
+              />
+              <div class="recommend-info">
+                <div class="recommend-text">
+                  <div class="recommend-name">ありふれた職業で世界最強</div>
+                  <div class="recommend-desc">この錬成師、世界最強。</div>
+                </div>
+                <button class="start-btn">Start</button>
+              </div>
+            </div>
+
+            <div class="recommend-item">
+              <div class="rank-number top3">3</div>
+              <img
+                src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png"
+                alt="Game"
+                class="recommend-icon"
+              />
+              <div class="recommend-info">
+                <div class="recommend-text">
+                  <div class="recommend-name">魔法陣グルグル ほしくず...</div>
+                  <div class="recommend-desc">
+                    絵本のような可愛い世界を冒険！
+                  </div>
+                </div>
+                <button class="start-btn">Start</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="recommend-group">
+            <div class="recommend-item">
+              <div class="rank-number">4</div>
+              <img
+                src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png"
+                alt="Game"
+                class="recommend-icon"
+              />
+              <div class="recommend-info">
+                <div class="recommend-text">
+                  <div class="recommend-name">銀河英雄伝説 戦いの輪舞...</div>
+                  <div class="recommend-desc">銀河の歴史が、また1ページ</div>
+                </div>
+                <button class="start-btn">Start</button>
+              </div>
+            </div>
+
+            <div class="recommend-item">
+              <div class="rank-number">5</div>
+              <img
+                src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png"
+                alt="Game"
+                class="recommend-icon"
+              />
+              <div class="recommend-info">
+                <div class="recommend-text">
+                  <div class="recommend-name">ありふれた職業で世界最強</div>
+                  <div class="recommend-desc">この錬成師、世界最強。</div>
+                </div>
+                <button class="start-btn">Start</button>
+              </div>
+            </div>
+
+            <div class="recommend-item">
+              <div class="rank-number">6</div>
+              <img
+                src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png"
+                alt="Game"
+                class="recommend-icon"
+              />
+              <div class="recommend-info">
+                <div class="recommend-text">
+                  <div class="recommend-name">魔法陣グルグル ほしくず...</div>
+                  <div class="recommend-desc">
+                    絵本のような可愛い世界を冒険！
+                  </div>
+                </div>
+                <button class="start-btn">Start</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="recommend-group">
+            <div class="recommend-item">
+              <div class="rank-number">7</div>
+              <img
+                src="../assest/p3/864b0ad571e9defff8a3cb2cea20ed51.png"
+                alt="Game"
+                class="recommend-icon"
+              />
+              <div class="recommend-info">
+                <div class="recommend-text">
+                  <div class="recommend-name">KING OF PRISM 煌</div>
+                  <div class="recommend-desc">
+                    星光王子的闪耀光辉，永远在你...
+                  </div>
+                </div>
+                <button class="start-btn">Start</button>
+              </div>
+            </div>
+
+            <div class="recommend-item">
+              <div class="rank-number">8</div>
+              <img
+                src="../assest/p3/c475dae4e109e858b44bf5dbfb84462d.png"
+                alt="Game"
+                class="recommend-icon"
+              />
+              <div class="recommend-info">
+                <div class="recommend-text">
+                  <div class="recommend-name">蜘蛛ですが、なにか？</div>
+                  <div class="recommend-desc">迷宮サバイバルファンタジー</div>
+                </div>
+                <button class="start-btn">Start</button>
+              </div>
+            </div>
+
+            <div class="recommend-item">
+              <div class="rank-number">9</div>
+              <img
+                src="../assest/p3/c9e6b3c82ca1a8172c95dc79b264ffa2.png"
+                alt="Game"
+                class="recommend-icon"
+              />
+              <div class="recommend-info">
+                <div class="recommend-text">
+                  <div class="recommend-name">魔法陣グルグル</div>
+                  <div class="recommend-desc">
+                    絵本のような可愛い世界を冒険！
+                  </div>
+                </div>
+                <button class="start-btn">Start</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- 底部导航 -->
       <div class="bottom-nav">
         <div class="nav-item active">
@@ -398,7 +921,11 @@
           <div>事前登録</div>
         </div>
         <div class="nav-item">
-          <img src="../assest/p2/排行榜icon.png" alt="排行榜" class="nav-icon" />
+          <img
+            src="../assest/p2/排行榜icon.png"
+            alt="排行榜"
+            class="nav-icon"
+          />
           <div>ランキング</div>
         </div>
         <div class="nav-item">
@@ -410,15 +937,15 @@
 
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
-      new Swiper('.banner .swiper', {
-        slidesPerView: 'auto',
+      new Swiper(".banner .swiper", {
+        slidesPerView: "auto",
         centeredSlides: true,
         spaceBetween: 8,
         loop: false,
         initialSlide: 1,
         watchSlidesProgress: true,
-        watchSlidesVisibility: true
+        watchSlidesVisibility: true,
       });
     </script>
   </body>
-</html> 
+</html>
