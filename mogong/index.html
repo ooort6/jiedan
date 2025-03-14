@@ -454,12 +454,165 @@
                   </a-tab-pane>
                   <a-tab-pane key="7" tab="录制">
                     <div style="padding: 16px">
-                      <a-textarea
-                        v-model:value="recordContent"
-                        :rows="20"
-                        placeholder="在这里编辑录制相关内容..."
-                        style="resize: none; width: 100%"
-                      />
+                      <!-- 替换为两列布局 -->
+                      <div style="display: flex; height: 50vh">
+                        <!-- 左侧坐标列表 -->
+                        <div
+                          style="
+                            width: 50%;
+                            padding-right: 8px;
+                            border-right: 1px solid #f0f0f0;
+                            height: 100%;
+                            overflow-y: auto;
+                          "
+                        >
+                          <div style="margin-bottom: 8px; font-weight: bold">
+                            坐标
+                          </div>
+                          <a-table
+                            :columns="[
+                              { title: '坐标', dataIndex: 'coordinate', key: 'coordinate' }
+                            ]"
+                            :data-source="coordinateList"
+                            :pagination="false"
+                            size="small"
+                            :scroll="{ y: 'calc(50vh - 80px)' }"
+                            :row-class-name="(_record, index) => (selectedCoordinateIndex === index ? 'ant-table-row-selected' : '')"
+                            @row-click="(record, index) => selectCoordinate(index)"
+                          >
+                          </a-table>
+
+                          <!-- 底部输入框和按钮 -->
+                          <div style="margin-top: 8px; display: flex">
+                            <a-input
+                              v-model:value="newCoordinate"
+                              placeholder="输入坐标"
+                              style="flex: 1; margin-right: 8px"
+                            />
+                            <a-button
+                              type="primary"
+                              size="small"
+                              @click="addCoordinate"
+                              >添加坐标</a-button
+                            >
+                            <a-button
+                              type="danger"
+                              size="small"
+                              style="margin-left: 8px"
+                              @click="deleteCoordinate"
+                              >删除坐标</a-button
+                            >
+                            <a-button
+                              size="small"
+                              style="margin-left: 8px"
+                              @click="clearCoordinates"
+                              >清空</a-button
+                            >
+                          </div>
+                        </div>
+
+                        <!-- 右侧坐标名列表 -->
+                        <div
+                          style="
+                            width: 50%;
+                            padding-left: 8px;
+                            height: 100%;
+                            overflow-y: auto;
+                          "
+                        >
+                          <div style="margin-bottom: 8px; font-weight: bold">
+                            坐标名
+                          </div>
+                          <a-table
+                            :columns="[
+                              { title: '坐标名', dataIndex: 'name', key: 'name' }
+                            ]"
+                            :data-source="coordinateNameList"
+                            :pagination="false"
+                            size="small"
+                            :scroll="{ y: 'calc(50vh - 80px)' }"
+                            :row-class-name="(_record, index) => (selectedCoordinateNameIndex === index ? 'ant-table-row-selected' : '')"
+                            @row-click="(record, index) => selectCoordinateName(index)"
+                          >
+                          </a-table>
+
+                          <!-- 底部输入框和按钮 -->
+                          <div style="margin-top: 8px; display: flex">
+                            <a-input
+                              v-model:value="newCoordinateName"
+                              placeholder="输入坐标名"
+                              style="flex: 1; margin-right: 8px"
+                            />
+                            <a-button
+                              type="primary"
+                              size="small"
+                              @click="addCoordinateName"
+                              >添加坐标名</a-button
+                            >
+                            <a-button
+                              type="danger"
+                              size="small"
+                              style="margin-left: 8px"
+                              @click="deleteCoordinateName"
+                              >删除坐标名</a-button
+                            >
+                            <a-button
+                              size="small"
+                              style="margin-left: 8px"
+                              @click="clearCoordinateNames"
+                              >清空</a-button
+                            >
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 底部命令区域 -->
+                      <div
+                        style="
+                          margin-top: 16px;
+                          border-top: 1px solid #f0f0f0;
+                          padding-top: 16px;
+                        "
+                      >
+                        <div
+                          style="
+                            display: flex;
+                            align-items: center;
+                            margin-bottom: 8px;
+                          "
+                        >
+                          <span style="width: 60px">命令：</span>
+                          <a-select
+                            v-model:value="selectedCommand"
+                            style="flex: 1"
+                          >
+                            <a-select-option value="command1"
+                              >取当前地图ID</a-select-option
+                            >
+                            <a-select-option value="command2"
+                              >指令说明文档</a-select-option
+                            >
+                          </a-select>
+                        </div>
+
+                        <div style="margin-top: 16px; display: flex; gap: 8px">
+                          <a-button type="primary" @click="executeCommand"
+                            >添加坐标</a-button
+                          >
+                          <a-button @click="executeCommand">删除坐标</a-button>
+                          <a-button @click="executeCommand">清空</a-button>
+                          <a-button @click="executeCommand"
+                            >复制全部路径格式lua</a-button
+                          >
+                          <a-button @click="executeCommand"
+                            >生成路径格式</a-button
+                          >
+                        </div>
+
+                        <div style="margin-top: 16px">
+                          <a-input placeholder="取当前地图ID" />
+                        </div>
+                      </div>
                     </div>
                   </a-tab-pane>
                 </a-tabs>
@@ -1584,6 +1737,125 @@
           const itemContent = ref("");
           const recordContent = ref("");
 
+          // 录制标签页相关数据
+          const coordinateList = ref([
+            { key: "1", coordinate: "100,200" },
+            { key: "2", coordinate: "150,250" },
+            { key: "3", coordinate: "200,300" },
+          ]);
+          const coordinateNameList = ref([
+            { key: "1", name: "城镇入口" },
+            { key: "2", name: "商店" },
+            { key: "3", name: "传送点" },
+          ]);
+          const selectedCoordinateIndex = ref(-1);
+          const selectedCoordinateNameIndex = ref(-1);
+          const newCoordinate = ref("");
+          const newCoordinateName = ref("");
+          const selectedCommand = ref("command1");
+
+          // 坐标操作方法
+          const selectCoordinate = (index) => {
+            selectedCoordinateIndex.value = index;
+          };
+
+          const addCoordinate = () => {
+            if (!newCoordinate.value) {
+              message.warning("请输入坐标");
+              return;
+            }
+            const key = (coordinateList.value.length + 1).toString();
+            coordinateList.value.push({
+              key,
+              coordinate: newCoordinate.value,
+            });
+            newCoordinate.value = "";
+            message.success("添加坐标成功");
+          };
+
+          const deleteCoordinate = () => {
+            if (selectedCoordinateIndex.value === -1) {
+              message.warning("请先选择要删除的坐标");
+              return;
+            }
+            coordinateList.value.splice(selectedCoordinateIndex.value, 1);
+            // 重新生成key
+            coordinateList.value = coordinateList.value.map((item, index) => ({
+              ...item,
+              key: (index + 1).toString(),
+            }));
+            selectedCoordinateIndex.value = -1;
+            message.success("删除坐标成功");
+          };
+
+          const clearCoordinates = () => {
+            Modal.confirm({
+              title: "确认清空",
+              content: "确定要清空所有坐标吗？",
+              onOk() {
+                coordinateList.value = [];
+                selectedCoordinateIndex.value = -1;
+                message.success("已清空所有坐标");
+              },
+            });
+          };
+
+          // 坐标名操作方法
+          const selectCoordinateName = (index) => {
+            selectedCoordinateNameIndex.value = index;
+          };
+
+          const addCoordinateName = () => {
+            if (!newCoordinateName.value) {
+              message.warning("请输入坐标名");
+              return;
+            }
+            const key = (coordinateNameList.value.length + 1).toString();
+            coordinateNameList.value.push({
+              key,
+              name: newCoordinateName.value,
+            });
+            newCoordinateName.value = "";
+            message.success("添加坐标名成功");
+          };
+
+          const deleteCoordinateName = () => {
+            if (selectedCoordinateNameIndex.value === -1) {
+              message.warning("请先选择要删除的坐标名");
+              return;
+            }
+            coordinateNameList.value.splice(
+              selectedCoordinateNameIndex.value,
+              1
+            );
+            // 重新生成key
+            coordinateNameList.value = coordinateNameList.value.map(
+              (item, index) => ({
+                ...item,
+                key: (index + 1).toString(),
+              })
+            );
+            selectedCoordinateNameIndex.value = -1;
+            message.success("删除坐标名成功");
+          };
+
+          const clearCoordinateNames = () => {
+            Modal.confirm({
+              title: "确认清空",
+              content: "确定要清空所有坐标名吗？",
+              onOk() {
+                coordinateNameList.value = [];
+                selectedCoordinateNameIndex.value = -1;
+                message.success("已清空所有坐标名");
+              },
+            });
+          };
+
+          // 命令执行方法
+          const executeCommand = () => {
+            message.info(`执行命令: ${selectedCommand.value}`);
+          };
+
           const currentScriptContent = ref("");
 
           const handleScriptSelect = (selectedKeys, info) => {
@@ -1650,6 +1922,22 @@
             recordContent,
             currentScriptContent,
             handleScriptSelect,
+            coordinateList,
+            coordinateNameList,
+            selectedCoordinateIndex,
+            selectedCoordinateNameIndex,
+            newCoordinate,
+            newCoordinateName,
+            selectedCommand,
+            selectCoordinate,
+            addCoordinate,
+            deleteCoordinate,
+            clearCoordinates,
+            selectCoordinateName,
+            addCoordinateName,
+            deleteCoordinateName,
+            clearCoordinateNames,
+            executeCommand,
           };
         },
       });
