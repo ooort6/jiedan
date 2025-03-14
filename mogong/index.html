@@ -362,8 +362,15 @@
                         background: white;
                       "
                     >
+                      <div>
+                        <a-input
+                          v-model:value="newScriptName"
+                          placeholder="输入新脚本名"
+                          style="width: 18%; margin-bottom: 8px"
+                        />
+                      </div>
                       <div style="display: flex; gap: 8px">
-                        <a-button type="primary" @click="handleNewScript">
+                        <a-button type="primary">
                           <template #icon>
                             <component
                               :is="icons.FileAddOutlined"
