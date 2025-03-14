@@ -454,126 +454,217 @@
                   </a-tab-pane>
                   <a-tab-pane key="7" tab="录制">
                     <div style="padding: 16px">
-                      <!-- 替换为两列布局 -->
-                      <div style="display: flex; height: 50vh">
+                      <!-- 顶部标签栏 -->
+
+                      <!-- 两列布局 -->
+                      <div
+                        style="
+                          display: flex;
+                          height: 50vh;
+                          min-height: 400px;
+                          border: 1px solid #d9d9d9;
+                          border-radius: 2px;
+                        "
+                      >
                         <!-- 左侧坐标列表 -->
                         <div
                           style="
                             width: 50%;
-                            padding-right: 8px;
-                            border-right: 1px solid #f0f0f0;
-                            height: 100%;
-                            overflow-y: auto;
+                            border-right: 1px solid #d9d9d9;
+                            display: flex;
+                            flex-direction: column;
                           "
                         >
-                          <div style="margin-bottom: 8px; font-weight: bold">
+                          <!-- 标题 -->
+                          <div
+                            style="
+                              padding: 8px;
+                              background-color: #f5f5f5;
+                              border-bottom: 1px solid #d9d9d9;
+                              font-weight: bold;
+                            "
+                          >
                             坐标
                           </div>
-                          <a-table
-                            :columns="[
-                              { title: '坐标', dataIndex: 'coordinate', key: 'coordinate' }
-                            ]"
-                            :data-source="coordinateList"
-                            :pagination="false"
-                            size="small"
-                            :scroll="{ y: 'calc(50vh - 80px)' }"
-                            :row-class-name="(_record, index) => (selectedCoordinateIndex === index ? 'ant-table-row-selected' : '')"
-                            @row-click="(record, index) => selectCoordinate(index)"
-                          >
-                          </a-table>
 
-                          <!-- 底部输入框和按钮 -->
-                          <div style="margin-top: 8px; display: flex">
-                            <a-input
-                              v-model:value="newCoordinate"
-                              placeholder="输入坐标"
-                              style="flex: 1; margin-right: 8px"
-                            />
-                            <a-button
-                              type="primary"
+                          <!-- 坐标列表 -->
+                          <div style="flex: 1; overflow-y: auto">
+                            <a-table
+                              :columns="[{ title: '', dataIndex: 'coordinate', key: 'coordinate' }]"
+                              :data-source="coordinateList"
+                              :pagination="false"
                               size="small"
-                              @click="addCoordinate"
-                              >添加坐标</a-button
+                              :showHeader="false"
+                              :rowClassName="(_record, index) => (selectedCoordinateIndex === index ? 'ant-table-row-selected' : '')"
+                              @row-click="(record, index) => selectCoordinate(index)"
+                              style="border: none"
                             >
-                            <a-button
-                              type="danger"
-                              size="small"
-                              style="margin-left: 8px"
-                              @click="deleteCoordinate"
-                              >删除坐标</a-button
-                            >
-                            <a-button
-                              size="small"
-                              style="margin-left: 8px"
-                              @click="clearCoordinates"
-                              >清空</a-button
-                            >
+                            </a-table>
                           </div>
                         </div>
 
-                        <!-- 右侧坐标名列表 -->
+                        <!-- 右侧怪物名列表 -->
                         <div
                           style="
                             width: 50%;
-                            padding-left: 8px;
-                            height: 100%;
-                            overflow-y: auto;
+                            display: flex;
+                            flex-direction: column;
                           "
                         >
-                          <div style="margin-bottom: 8px; font-weight: bold">
-                            坐标名
-                          </div>
-                          <a-table
-                            :columns="[
-                              { title: '坐标名', dataIndex: 'name', key: 'name' }
-                            ]"
-                            :data-source="coordinateNameList"
-                            :pagination="false"
-                            size="small"
-                            :scroll="{ y: 'calc(50vh - 80px)' }"
-                            :row-class-name="(_record, index) => (selectedCoordinateNameIndex === index ? 'ant-table-row-selected' : '')"
-                            @row-click="(record, index) => selectCoordinateName(index)"
+                          <!-- 标题 -->
+                          <div
+                            style="
+                              padding: 8px;
+                              background-color: #f5f5f5;
+                              border-bottom: 1px solid #d9d9d9;
+                              font-weight: bold;
+                            "
                           >
-                          </a-table>
+                            怪物名
+                          </div>
 
-                          <!-- 底部输入框和按钮 -->
-                          <div style="margin-top: 8px; display: flex">
-                            <a-input
-                              v-model:value="newCoordinateName"
-                              placeholder="输入坐标名"
-                              style="flex: 1; margin-right: 8px"
-                            />
-                            <a-button
-                              type="primary"
+                          <!-- 怪物名列表 -->
+                          <div style="flex: 1; overflow-y: auto">
+                            <a-table
+                              :columns="[{ title: '', dataIndex: 'name', key: 'name' }]"
+                              :data-source="coordinateNameList"
+                              :pagination="false"
                               size="small"
-                              @click="addCoordinateName"
-                              >添加坐标名</a-button
+                              :showHeader="false"
+                              :rowClassName="(_record, index) => (selectedCoordinateNameIndex === index ? 'ant-table-row-selected' : '')"
+                              @row-click="(record, index) => selectCoordinateName(index)"
+                              style="border: none"
                             >
-                            <a-button
-                              type="danger"
-                              size="small"
-                              style="margin-left: 8px"
-                              @click="deleteCoordinateName"
-                              >删除坐标名</a-button
-                            >
-                            <a-button
-                              size="small"
-                              style="margin-left: 8px"
-                              @click="clearCoordinateNames"
-                              >清空</a-button
+                            </a-table>
+                          </div>
+
+                          <!-- 右侧底部输入框和按钮 -->
+                          <div
+                            style="padding: 8px; border-top: 1px solid #d9d9d9"
+                          >
+                            <div style="margin-bottom: 8px">
+                              <div style="display: flex; align-items: center">
+                                <a-input
+                                  v-model:value="newCoordinateName"
+                                  placeholder="输入怪物名"
+                                  style="flex: 1; margin-right: 8px"
+                                />
+                              </div>
+                            </div>
+
+                            <div style="margin-bottom: 8px">
+                              <div style="display: flex; align-items: center">
+                                <a-select
+                                  v-model:value="monsterType"
+                                  style="flex: 1"
+                                  :options="[
+                                    { value: 'attack', label: '攻击' },
+                                    { value: 'avoid', label: '躲避' }
+                                  ]"
+                                />
+                              </div>
+                            </div>
+
+                            <div style="display: flex; margin-bottom: 8px">
+                              <a-button
+                                type="primary"
+                                @click="addCoordinateName"
+                                style="flex: 1; margin-right: 4px"
+                                >添加选中目标</a-button
+                              >
+                              <a-button
+                                @click="manualAddCoordinateName"
+                                style="flex: 1"
+                                >手动添加</a-button
+                              >
+                            </div>
+                            <div style="display: flex; margin-bottom: 8px">
+                              <a-button
+                                @click="modifyCoordinateName"
+                                style="flex: 1; margin-right: 4px"
+                                >修改</a-button
+                              >
+                              <a-button
+                                @click="deleteCoordinateName"
+                                style="flex: 1; margin-right: 4px"
+                                >删除选中</a-button
+                              >
+                              <a-button
+                                @click="clearCoordinateNames"
+                                style="flex: 1"
+                                >清空</a-button
+                              >
+                            </div>
+                            <a-button style="width: 100%" @click="copyNameList"
+                              >复制名字列表</a-button
                             >
                           </div>
                         </div>
                       </div>
 
-                      <!-- 底部命令区域 -->
-                      <div
-                        style="
-                          margin-top: 16px;
-                          border-top: 1px solid #f0f0f0;
-                          padding-top: 16px;
-                        "
-                      >
+                      <!-- 底部操作区域 -->
+                      <div style="margin-top: 16px">
+                        <!-- 坐标区域 -->
+                        <div style="display: flex; margin-bottom: 8px">
+                          <a-input
+                            placeholder="坐标"
+                            style="width: 350px; margin-right: 8px"
+                          />
+                        </div>
+
+                        <!-- 左侧按钮组 -->
+                        <div
+                          style="display: flex; gap: 4px; margin-bottom: 8px"
+                        >
+                          <a-button type="primary" @click="addCoordinate"
+                            >添加坐标</a-button
+                          >
+                          <a-button @click="deleteCoordinate"
+                            >删除选中</a-button
+                          >
+                          <a-button @click="modifyCoordinate">修改</a-button>
+                          <a-button @click="clearCoordinates">清空</a-button>
+                          <div style="flex: 1"></div>
+                          指令：
+                          <a-select
+                            v-model:value="coordinateType"
+                            style="width: 120px"
+                          >
+                            <a-select-option value="attack"
+                              >指令1</a-select-option
+                            >
+                            <a-select-option value="avoid"
+                              >指令2</a-select-option
+                            >
+                          </a-select>
+                          <a-button
+                            style="background-color: #f0f0f0"
+                            @click="showCommandDoc"
+                            >指令说明文档</a-button
+                          >
+                        </div>
+
+                        <!-- 复制路径按钮 -->
+                        <div style="margin-bottom: 8px">
+                          <a-button
+                            type="primary"
+                            style="width: 18%; text-align: left"
+                            @click="copyPathFormat"
+                            >复制全部路径代码到lua</a-button
+                          >
+                        </div>
+
+                        <!-- 生成路径按钮 -->
+                        <div style="margin-bottom: 8px">
+                          <a-button
+                            type="primary"
+                            style="width: 18%; text-align: left"
+                            @click="generatePathFormat"
+                            >生成路径代码格式</a-button
+                          >
+                        </div>
+
+                        <!-- 取当前地图ID -->
                         <div
                           style="
                             display: flex;
@@ -581,36 +672,26 @@
                             margin-bottom: 8px;
                           "
                         >
-                          <span style="width: 60px">命令：</span>
-                          <a-select
-                            v-model:value="selectedCommand"
-                            style="flex: 1"
-                          >
-                            <a-select-option value="command1"
-                              >取当前地图ID</a-select-option
-                            >
-                            <a-select-option value="command2"
-                              >指令说明文档</a-select-option
-                            >
-                          </a-select>
+                          <a-input
+                            v-model:value="currentMapId"
+                            style="width: 18%; margin-right: 8px"
+                            placeholder="地图ID"
+                          />
                         </div>
 
-                        <div style="margin-top: 16px; display: flex; gap: 8px">
-                          <a-button type="primary" @click="executeCommand"
-                            >添加坐标</a-button
+                        <div
+                          style="
+                            display: flex;
+                            align-items: center;
+                            margin-bottom: 8px;
+                          "
+                        >
+                          <a-button
+                            type="primary"
+                            @click="getCurrentMapId"
+                            style="width: 18%"
+                            >取当前地图ID</a-button
                           >
-                          <a-button @click="executeCommand">删除坐标</a-button>
-                          <a-button @click="executeCommand">清空</a-button>
-                          <a-button @click="executeCommand"
-                            >复制全部路径格式lua</a-button
-                          >
-                          <a-button @click="executeCommand"
-                            >生成路径格式</a-button
-                          >
-                        </div>
-
-                        <div style="margin-top: 16px">
-                          <a-input placeholder="取当前地图ID" />
                         </div>
                       </div>
                     </div>
@@ -1753,6 +1834,7 @@
           const newCoordinate = ref("");
           const newCoordinateName = ref("");
           const selectedCommand = ref("command1");
+          const monsterType = ref("attack");
 
           // 坐标操作方法
           const selectCoordinate = (index) => {
@@ -1807,16 +1889,57 @@
 
           const addCoordinateName = () => {
             if (!newCoordinateName.value) {
-              message.warning("请输入坐标名");
+              message.warning("请输入怪物名");
               return;
             }
             const key = (coordinateNameList.value.length + 1).toString();
             coordinateNameList.value.push({
               key,
               name: newCoordinateName.value,
+              type: monsterType.value,
             });
             newCoordinateName.value = "";
-            message.success("添加坐标名成功");
+            message.success("添加怪物名成功");
+          };
+
+          // 手动添加怪物名
+          const manualAddCoordinateName = () => {
+            if (!newCoordinateName.value) {
+              message.warning("请输入怪物名");
+              return;
+            }
+            const key = (coordinateNameList.value.length + 1).toString();
+            coordinateNameList.value.push({
+              key,
+              name: newCoordinateName.value,
+              type: monsterType.value,
+            });
+            newCoordinateName.value = "";
+            message.success("手动添加怪物名成功");
+          };
+
+          // 复制名字列表
+          const copyNameList = () => {
+            if (coordinateNameList.value.length === 0) {
+              message.warning("没有怪物名可复制");
+              return;
+            }
+
+            // 构建名字列表字符串
+            let nameList = "";
+            coordinateNameList.value.forEach((item) => {
+              nameList += `${item.name}\n`;
+            });
+
+            // 复制到剪贴板
+            navigator.clipboard
+              .writeText(nameList)
+              .then(() => {
+                message.success("已复制名字列表到剪贴板");
+              })
+              .catch((err) => {
+                message.error("复制失败: " + err);
+              });
           };
 
           const deleteCoordinateName = () => {
@@ -1856,6 +1979,73 @@
             message.info(`执行命令: ${selectedCommand.value}`);
           };
 
+          // 复制全部路径格式lua
+          const copyPathFormat = () => {
+            if (coordinateList.value.length === 0) {
+              message.warning("没有坐标可复制");
+              return;
+            }
+
+            // 构建lua格式的路径字符串
+            let luaCode = "local path = {\n";
+            coordinateList.value.forEach((item, index) => {
+              const name = coordinateNameList.value[index]
+                ? coordinateNameList.value[index].name
+                : "";
+              luaCode += `  {${item.coordinate}, "${name}"},\n`;
+            });
+            luaCode += "}\n\nreturn path";
+
+            // 复制到剪贴板
+            navigator.clipboard
+              .writeText(luaCode)
+              .then(() => {
+                message.success("已复制全部路径格式到剪贴板");
+              })
+              .catch((err) => {
+                message.error("复制失败: " + err);
+              });
+          };
+
+          // 生成路径格式
+          const generatePathFormat = () => {
+            if (coordinateList.value.length === 0) {
+              message.warning("没有坐标可生成路径");
+              return;
+            }
+
+            // 生成路径格式
+            let pathFormat = "";
+            coordinateList.value.forEach((item, index) => {
+              const name = coordinateNameList.value[index]
+                ? coordinateNameList.value[index].name
+                : "";
+              pathFormat += `${item.coordinate} - ${name}\n`;
+            });
+
+            // 显示生成的路径格式
+            Modal.info({
+              title: "生成的路径格式",
+              content: h("div", {}, [
+                h(
+                  "pre",
+                  { style: "max-height: 300px; overflow-y: auto;" },
+                  pathFormat
+                ),
+              ]),
+              width: 500,
+            });
+          };
+
+          // 获取当前地图ID
+          const getCurrentMapId = () => {
+            // 模拟获取当前地图ID
+            const mapId = Math.floor(Math.random() * 10000);
+            message.success(`当前地图ID: ${mapId}`);
+          };
+
+          const currentMapId = ref("");
+
           const currentScriptContent = ref("");
 
           const handleScriptSelect = (selectedKeys, info) => {
@@ -1868,6 +2058,76 @@
                 currentScriptContent.value = `// ${selectedScript.title} 的内容\n`;
               }
             }
+          };
+
+          // 修改坐标方法
+          const modifyCoordinate = () => {
+            if (selectedCoordinateIndex.value === -1) {
+              message.warning("请先选择要修改的坐标");
+              return;
+            }
+
+            // 将选中的坐标填入输入框
+            newCoordinate.value =
+              coordinateList.value[selectedCoordinateIndex.value].coordinate;
+
+            // 弹出确认对话框
+            Modal.confirm({
+              title: "修改坐标",
+              content: h("div", {}, [
+                h("p", "请修改坐标值:"),
+                h(Input, {
+                  value: newCoordinate.value,
+                  onChange: (e) => (newCoordinate.value = e.target.value),
+                }),
+              ]),
+              onOk() {
+                if (!newCoordinate.value) {
+                  message.error("坐标不能为空");
+                  return;
+                }
+                // 更新坐标
+                coordinateList.value[selectedCoordinateIndex.value].coordinate =
+                  newCoordinate.value;
+                message.success("修改坐标成功");
+              },
+            });
+          };
+
+          // 修改怪物名方法
+          const modifyCoordinateName = () => {
+            if (selectedCoordinateNameIndex.value === -1) {
+              message.warning("请先选择要修改的怪物名");
+              return;
+            }
+
+            // 将选中的怪物名填入输入框
+            newCoordinateName.value =
+              coordinateNameList.value[selectedCoordinateNameIndex.value].name;
+
+            // 弹出确认对话框
+            Modal.confirm({
+              title: "修改怪物名",
+              content: h("div", {}, [
+                h("p", "请修改怪物名:"),
+                h(Input, {
+                  value: newCoordinateName.value,
+                  onChange: (e) => (newCoordinateName.value = e.target.value),
+                }),
+              ]),
+              onOk() {
+                if (!newCoordinateName.value) {
+                  message.error("怪物名不能为空");
+                  return;
+                }
+                // 更新怪物名
+                coordinateNameList.value[
+                  selectedCoordinateNameIndex.value
+                ].name = newCoordinateName.value;
+                message.success("修改怪物名成功");
+                newCoordinateName.value = ""; // 清空输入框
+              },
+            });
           };
 
           // 返回模板需要使用的数据和方法
@@ -1938,6 +2198,15 @@
             deleteCoordinateName,
             clearCoordinateNames,
             executeCommand,
+            copyPathFormat,
+            generatePathFormat,
+            getCurrentMapId,
+            currentMapId,
+            monsterType,
+            manualAddCoordinateName,
+            copyNameList,
+            modifyCoordinate,
+            modifyCoordinateName,
           };
         },
       });
