@@ -1,0 +1,18 @@
+# 股票监控系统依赖包
+flask==1.1.2
+werkzeug==1.0.1
+requests==2.25.1
+jinja2==2.11.3
+markupsafe==2.0.1
+itsdangerous==1.1.0
+click==7.1.2
+APScheduler==3.8.1
+python-dotenv==0.19.0
+certifi>=2017.4.17
+chardet<5,>=3.0.2
+idna<3,>=2.5
+urllib3<1.27,>=1.21.1
+pytz
+setuptools>=0.7
+six>=1.4.0
+tzlocal!=3.*,>=2.0 
