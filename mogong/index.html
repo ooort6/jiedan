@@ -52,13 +52,21 @@
 
       /* 表格展开图标样式 */
       .ant-table-row-expand-icon {
-        margin-right: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        color: #1890ff;
+        line-height: 24px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
       }
 
-      /* 确保所有图标组件与文字之间有间距 */
-      [class*="anticon-"],
-      [class*="icon-"] {
-        margin-right: 8px;
+      .ant-table-row-expand-icon:hover {
+        color: #40a9ff;
       }
 
       .logo {
@@ -282,21 +290,34 @@
               <div style="min-height: 600px; margin-top: 16px">
                 <a-form layout="inline" style="margin-bottom: 16px">
                   <a-form-item>
-                    <input
+                    <!-- <input
                       type="file"
                       ref="scriptFileInput"
                       style="display: none"
                       @change="handleScriptFileChange"
-                    />
-                    <a-button type="primary" @click="openScriptFile">
-                      <template #icon>
-                        <component
-                          :is="icons.FileTextOutlined"
-                          style="margin-right: 8px"
-                        />
-                      </template>
-                      {{ selectedFileName || '全自动1-23级蓝号角1件蓝装.lua' }}
-                    </a-button>
+                    /> -->
+                    <a-select
+                      v-model="selectedScriptFile"
+                      style="width: 300px"
+                      placeholder="选择脚本文件"
+                      @change="handleScriptFileSelect"
+                    >
+                      <!-- 循环遍历每个文件夹 -->
+                      <a-select-opt-group
+                        v-for="folder in scriptTreeData"
+                        :key="folder.key"
+                        :label="folder.title"
+                      >
+                        <!-- 循环遍历文件夹内的每个脚本文件 -->
+                        <a-select-option
+                          v-for="script in folder.children"
+                          :key="script.key"
+                          :value="script.title"
+                        >
+                          {{ script.title }}
+                        </a-select-option>
+                      </a-select-opt-group>
+                    </a-select>
                   </a-form-item>
                   <a-form-item>
                     <a-button type="primary" @click="handleAdd"
@@ -342,10 +363,7 @@
                           :tree-data="scriptTreeData"
                           v-model:selectedKeys="selectedScriptKeys"
                           :default-expanded-keys="['folder-1', 'folder-2']"
-                          @select="(selectedKeys, {selected, node}) => {
-                            console.log('选中的节点:', node);
-                            selectedScriptKeys = selectedKeys;
-                          }"
+                          @select="handleScriptSelect"
                         />
                       </div>
 
@@ -900,10 +918,45 @@
                   :data-source="dataSource"
                   :columns="expandColumns"
                   :pagination="false"
-                  @expand="onExpand"
+                  :rowKey="record => record.id"
+                  :expandable="{
+                    expandedRowRender: (record) => h('div', {
+                      style: {
+                        padding: '20px',
+                        background: '#fafafa',
+                        border: '1px solid #f0f0f0',
+                        borderRadius: '4px'
+                      }
+                    }, [
+                      h('div', { style: { marginBottom: '16px' } }, [
+                        h('h3', { style: { marginBottom: '8px' } }, '详细信息'),
+                        h('p', { style: { marginBottom: '4px' } }, `名称: ${record.name}`),
+                        h('p', { style: { marginBottom: '4px' } }, `平台: ${record.platform}`),
+                        h('p', { style: { marginBottom: '4px' } }, `版本: ${record.version}`),
+                        h('p', { style: { marginBottom: '4px' } }, `创建者: ${record.creator}`),
+                        h('p', { style: { marginBottom: '4px' } }, `创建时间: ${record.date}`)
+                      ]),
+                      h('div', { style: { marginBottom: '16px' } }, [
+                        h('h3', { style: { marginBottom: '8px' } }, '运行状态'),
+                        h('p', { style: { marginBottom: '4px' } }, '状态: 运行中'),
+                        h('p', { style: { marginBottom: '4px' } }, '开始时间: 2024-03-20 10:00:00'),
+                        h('p', { style: { marginBottom: '4px' } }, '运行时长: 2小时30分钟')
+                      ]),
+                      h('div', [
+                        h('h3', { style: { marginBottom: '8px' } }, '操作记录'),
+                        h('p', { style: { marginBottom: '4px' } }, '2024-03-20 10:00:00 - 启动脚本'),
+                        h('p', { style: { marginBottom: '4px' } }, '2024-03-20 10:30:00 - 完成初始化'),
+                        h('p', { style: { marginBottom: '4px' } }, '2024-03-20 11:00:00 - 开始执行任务')
+                      ])
+                    ]),
+                    expandedRowKeys: expandedRowKeys.value,
+                    showExpandColumn: true
+                  }"
                 >
+                  <template #expandedRowRender="{ record }">
+                    <p style="margin: 0">{{ record.expandedContent }}</p>
+                  </template>
                 </a-table>
-
                 <!-- 添加信息 -->
                 <a-form layout="inline">
                   <a-form-item label="">
@@ -1410,13 +1463,15 @@
             },
           ]);
 
-          const onExpand = (expanded, record) => {
-            if (expanded) {
-              expandedRowKeys.value = [...expandedRowKeys.value, record.key];
-            } else {
+          const onExpand = (record) => {
+            const key = record.key;
+            const isExpanded = expandedRowKeys.value.includes(key);
+            if (isExpanded) {
               expandedRowKeys.value = expandedRowKeys.value.filter(
-                (key) => key !== record.key
+                (k) => k !== key
               );
+            } else {
+              expandedRowKeys.value = [...expandedRowKeys.value, key];
             }
           };
 
@@ -1454,223 +1509,59 @@
             },
           ];
 
+          const columns = [
+            { title: "姓名", dataIndex: "name", key: "name" },
+            { title: "年龄", dataIndex: "age", key: "age" },
+            { title: "地址", dataIndex: "address", key: "address" },
+            {
+              title: "操作",
+              key: "action",
+              scopedSlots: { customRender: "action" },
+            },
+          ];
+          const data = [
+            {
+              id: 1,
+              name: "张三",
+              age: 32,
+              address: "西湖区湖底公园1号",
+              expandedContent: "这是一些关于张三的更多信息。",
+            },
+            {
+              id: 2,
+              name: "李四",
+              age: 24,
+              address: "东山区和平路2号",
+              expandedContent: "这是一些关于李四的更多信息。",
+            },
+          ];
           // 表格数据
           const dataSource = reactive([
             {
+              id: 1,
               key: "1",
               name: "Screen",
               platform: "iOS",
+              expandedContent: "这是一些关于张三的更多信息。",
               version: "10.3.4.5654",
               upgraded: 500,
               creator: "Jack",
               date: "2014-12-24 23:12:00",
               action: "Publish",
-              description:
-                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
-              children: [
-                {
-                  key: "1-1",
-                  name: "Screen Detail",
-                  platform: "iOS",
-                  version: "10.3.4.5654",
-                  upgraded: 200,
-                  creator: "Jack",
-                  date: "2014-12-24 23:12:00",
-                  action: "View",
-                },
-              ],
+              expandable: true,
             },
             {
+              id: 2,
               key: "2",
               name: "Screen",
               platform: "iOS",
               version: "10.3.4.5654",
               upgraded: 500,
+              expandedContent: "这是一些关于李四的更多信息。",
               creator: "Jack",
               date: "2014-12-24 23:12:00",
               action: "Publish",
-              description:
-                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
-              children: [
-                {
-                  key: "2-1",
-                  name: "Screen Detail",
-                  platform: "iOS",
-                  version: "10.3.4.5654",
-                  upgraded: 200,
-                  creator: "Jack",
-                  date: "2014-12-24 23:12:00",
-                  action: "View",
-                },
-              ],
-            },
-            {
-              key: "3",
-              name: "Screen",
-              platform: "iOS",
-              version: "10.3.4.5654",
-              upgraded: 500,
-              creator: "Jack",
-              date: "2014-12-24 23:12:00",
-              action: "Publish",
-              description:
-                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
-              children: [
-                {
-                  key: "3-1",
-                  name: "Screen Detail",
-                  platform: "iOS",
-                  version: "10.3.4.5654",
-                  upgraded: 200,
-                  creator: "Jack",
-                  date: "2014-12-24 23:12:00",
-                  action: "View",
-                },
-              ],
-            },
-            {
-              key: "4",
-              name: "Screen",
-              platform: "iOS",
-              version: "10.3.4.5654",
-              upgraded: 500,
-              creator: "Jack",
-              date: "2014-12-24 23:12:00",
-              action: "Publish",
-              description:
-                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
-              children: [
-                {
-                  key: "4-1",
-                  name: "Screen Detail",
-                  platform: "iOS",
-                  version: "10.3.4.5654",
-                  upgraded: 200,
-                  creator: "Jack",
-                  date: "2014-12-24 23:12:00",
-                  action: "View",
-                },
-              ],
-            },
-            {
-              key: "5",
-              name: "Screen",
-              platform: "iOS",
-              version: "10.3.4.5654",
-              upgraded: 500,
-              creator: "Jack",
-              date: "2014-12-24 23:12:00",
-              action: "Publish",
-              description:
-                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
-              children: [
-                {
-                  key: "5-1",
-                  name: "Screen Detail",
-                  platform: "iOS",
-                  version: "10.3.4.5654",
-                  upgraded: 200,
-                  creator: "Jack",
-                  date: "2014-12-24 23:12:00",
-                  action: "View",
-                },
-              ],
-            },
-            {
-              key: "6",
-              name: "Screen",
-              platform: "iOS",
-              version: "10.3.4.5654",
-              upgraded: 500,
-              creator: "Jack",
-              date: "2014-12-24 23:12:00",
-              action: "Publish",
-              description:
-                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
-              children: [
-                {
-                  key: "6-1",
-                  name: "Screen Detail",
-                  platform: "iOS",
-                  version: "10.3.4.5654",
-                  upgraded: 200,
-                  creator: "Jack",
-                  date: "2014-12-24 23:12:00",
-                  action: "View",
-                },
-              ],
-            },
-            {
-              key: "7",
-              name: "Screen",
-              platform: "iOS",
-              version: "10.3.4.5654",
-              upgraded: 500,
-              creator: "Jack",
-              date: "2014-12-24 23:12:00",
-              action: "Publish",
-              description:
-                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
-              children: [
-                {
-                  key: "7-1",
-                  name: "Screen Detail",
-                  platform: "iOS",
-                  version: "10.3.4.5654",
-                  upgraded: 200,
-                  creator: "Jack",
-                  date: "2014-12-24 23:12:00",
-                  action: "View",
-                },
-              ],
-            },
-            {
-              key: "8",
-              name: "Screen",
-              platform: "iOS",
-              version: "10.3.4.5654",
-              upgraded: 500,
-              creator: "Jack",
-              date: "2014-12-24 23:12:00",
-              action: "Publish",
-              description:
-                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
-              children: [
-                {
-                  key: "8-1",
-                  name: "Screen Detail",
-                  platform: "iOS",
-                  version: "10.3.4.5654",
-                  upgraded: 200,
-                  creator: "Jack",
-                  date: "2014-12-24 23:12:00",
-                  action: "View",
-                },
-              ],
-            },
-            {
-              key: "9",
-              name: "Screen",
-              platform: "iOS",
-              version: "10.3.4.5654",
-              upgraded: 500,
-              creator: "Jack",
-              date: "2014-12-24 23:12:00",
-              action: "Publish",
-              description:
-                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
-              children: [
-                {
-                  key: "9-1",
-                  name: "Screen Detail",
-                  platform: "iOS",
-                  version: "10.3.4.5654",
-                  upgraded: 200,
-                  creator: "Jack",
-                  date: "2014-12-24 23:12:00",
-                  action: "View",
-                },
-              ],
+              expandable: true,
             },
           ]);
 
@@ -1709,19 +1600,45 @@
             {
               title: "操作",
               key: "action",
-              width: 100,
+              width: 200,
               align: "center",
               customRender: ({ record }) => {
                 return h(
-                  "a",
+                  "div",
                   {
                     style: {
-                      color: "#1677FF",
-                      cursor: "pointer",
+                      display: "flex",
+                      justifyContent: "center",
+                      gap: "8px",
                     },
-                    onClick: () => handlePublish(record),
                   },
-                  "Publish"
+                  [
+                    h(
+                      "a",
+                      {
+                        style: {
+                          color: "#1677FF",
+                          cursor: "pointer",
+                        },
+                        onClick: () => onExpand(record),
+                      },
+                      expandedRowKeys.value.includes(record.key)
+                        ? "收起"
+                        : "展开"
+                    ),
+                    h(
+                      "a",
+                      {
+                        style: {
+                          color: "#1677FF",
+                          cursor: "pointer",
+                          marginLeft: "8px",
+                        },
+                        onClick: () => handlePublish(record),
+                      },
+                      "Publish"
+                    ),
+                  ]
                 );
               },
             },
@@ -1812,20 +1729,6 @@
               creator: "Jack",
               date: "2014-12-24 23:12:00",
               action: "Publish",
-              description:
-                "Screen 的详细信息: 平台 iOS, 版本 10.3.4.5654, 创建者 Jack, 创建时间 2014-12-24 23:12:00",
-              children: [
-                {
-                  key: `${newKey}-1`,
-                  name: "Screen Detail",
-                  platform: "iOS",
-                  version: "10.3.4.5654",
-                  upgraded: 200,
-                  creator: "Jack",
-                  date: "2014-12-24 23:12:00",
-                  action: "View",
-                },
-              ],
             };
             dataSource.push(newRecord);
             message.success("添加成功");
@@ -1858,18 +1761,37 @@
             selectedScriptKeys.value = selectedKeys;
 
             if (info.node.isLeaf) {
-              // 如果是脚本文件，加载其内容
-              currentScriptContent.value = `// ${info.node.title} 的内容\n`;
+              // 如果是脚本文件，显示文件名
+              currentScriptContent.value = `-- ${info.node.title}`;
+            } else {
+              // 如果选中的是文件夹，清空内容
+              currentScriptContent.value = "";
             }
           };
 
           const handleNewScript = () => {
+            if (!newScriptName.value) {
+              message.error("请输入脚本文件名");
+              return;
+            }
+
+            const fileName = newScriptName.value.endsWith(".lua")
+              ? newScriptName.value
+              : newScriptName.value + ".lua";
+
             // 获取当前选中的节点
             const selectedKey = selectedScriptKeys.value[0];
-            console.log("当前选中的key:", selectedKey);
 
+            // 如果没有选中节点，直接添加到根目录
             if (!selectedKey) {
-              message.error("请先选择一个文件夹");
+              scriptTreeData.value.push({
+                title: fileName,
+                key: fileName,
+                isLeaf: true,
+              });
+              scriptTreeData.value = [...scriptTreeData.value];
+              message.success("新建脚本成功");
+              newScriptName.value = "";
               return;
             }
 
@@ -1887,44 +1809,30 @@
               return null;
             };
 
+            // 如果有选中节点，检查是否是文件夹
             const selectedNode = findNode(scriptTreeData.value);
-            console.log("找到的节点:", selectedNode);
-
-            if (!selectedNode || selectedNode.isLeaf) {
+            if (selectedNode && selectedNode.isLeaf) {
               message.error("请选择一个文件夹，而不是脚本文件");
               return;
             }
 
-            if (!newScriptName.value) {
-              message.error("请输入脚本文件名");
-              return;
+            if (selectedNode) {
+              // 在选中的文件夹下创建脚本
+              if (!selectedNode.children) {
+                selectedNode.children = [];
+              }
+
+              selectedNode.children.push({
+                title: fileName,
+                key: fileName,
+                isLeaf: true,
+              });
+
+              // 强制更新数据以触发视图更新
+              scriptTreeData.value = [...scriptTreeData.value];
+              message.success("新建脚本成功");
+              newScriptName.value = ""; // 清空输入
             }
-
-            const fileName = newScriptName.value.endsWith(".lua")
-              ? newScriptName.value
-              : newScriptName.value + ".lua";
-
-            // 生成新的key
-            const folderPrefix = selectedNode.key.split("-")[0];
-            const newKey = `${folderPrefix}-${
-              (selectedNode.children?.length || 0) + 1
-            }`;
-
-            // 创建新脚本对象
-            const newScript = {
-              title: fileName,
-              key: newKey,
-              isLeaf: true,
-            };
-
-            // 将新脚本添加到目标文件夹的children数组中
-            if (!selectedNode.children) {
-              selectedNode.children = [];
-            }
-            selectedNode.children.push(newScript);
-
-            message.success("新建脚本成功");
-            newScriptName.value = ""; // 清空输入
           };
 
           const handleDeleteScript = () => {
@@ -1966,6 +1874,8 @@
               onOk() {
                 if (removeScript(scriptTreeData.value)) {
                   selectedScriptKeys.value = []; // 清空选中
+                  // 强制更新scriptTreeData以触发视图更新
+                  scriptTreeData.value = [...scriptTreeData.value];
                   message.success("删除脚本成功");
                 } else {
                   message.error("删除脚本失败");
@@ -2502,12 +2412,21 @@
               selectedKeys.length > 0 ? selectedKeys[0] - 1 : -1;
           };
 
+          const selectedScriptFile = ref("");
+
+          const handleScriptFileSelect = (value) => {
+            selectedFileName.value = value;
+            message.success(`已选择脚本: ${value}`);
+          };
+
           // 返回模板需要使用的数据和方法
           return {
             activeTab,
             switchTab,
             onlineUsers,
             updateLogs,
+            data,
+            columns,
             dataSource,
             expandColumns,
             defaultRole,
@@ -2589,6 +2508,8 @@
             onCoordinateSelectChange,
             selectedCoordinateNameKeys,
             onCoordinateNameSelectChange,
+            selectedScriptFile,
+            handleScriptFileSelect,
           };
         },
       });
