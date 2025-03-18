@@ -49,7 +49,7 @@ def load_ma_stocks():
     """从文件加载均线监控股票数据"""
     if os.path.exists(MA_STOCKS_FILE):
         with open(MA_STOCKS_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return json.load(f)
     return []
 
 def save_ma_stocks(stocks):
@@ -292,7 +292,7 @@ def add_stock():
     }
     
     stocks.append(new_stock)
-    save_stocks(stocks)
+        save_stocks(stocks)
     
     # 简化消息内容，减少API调用
     try:

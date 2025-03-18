@@ -173,6 +173,15 @@
         -webkit-tap-highlight-color: transparent;
         -webkit-touch-callout: none;
       }
+
+      /* 添加表格行选中样式 */
+      .ant-table-row-selected > td {
+        background-color: #e6f7ff !important;
+      }
+
+      .ant-table-row:hover > td {
+        background-color: #f5f5f5;
+      }
     </style>
   </head>
 
@@ -332,8 +341,11 @@
                         <a-tree
                           :tree-data="scriptTreeData"
                           v-model:selectedKeys="selectedScriptKeys"
-                          :default-expanded-keys="['1']"
-                          @select="handleScriptSelect"
+                          :default-expanded-keys="['folder-1', 'folder-2']"
+                          @select="(selectedKeys, {selected, node}) => {
+                            console.log('选中的节点:', node);
+                            selectedScriptKeys = selectedKeys;
+                          }"
                         />
                       </div>
 
@@ -370,7 +382,7 @@
                         />
                       </div>
                       <div style="display: flex; gap: 8px">
-                        <a-button type="primary">
+                        <a-button type="primary" @click="handleNewScript">
                           <template #icon>
                             <component
                               :is="icons.FileAddOutlined"
@@ -497,15 +509,59 @@
                           <!-- 坐标列表 -->
                           <div style="flex: 1; overflow-y: auto">
                             <a-table
-                              :columns="[{ title: '', dataIndex: 'coordinate', key: 'coordinate' }]"
+                              :columns="[{ title: '坐标', dataIndex: 'coordinate', key: 'coordinate', align: 'left' }]"
                               :data-source="coordinateList"
                               :pagination="false"
                               size="small"
-                              :showHeader="false"
-                              :rowClassName="(_record, index) => (selectedCoordinateIndex === index ? 'ant-table-row-selected' : '')"
-                              @row-click="(record, index) => selectCoordinate(index)"
+                              :showHeader="true"
+                              :row-selection="{ 
+                                type: 'radio',
+                                selectedRowKeys: selectedCoordinateKeys, 
+                                onChange: onCoordinateSelectChange 
+                              }"
                               style="border: none"
                             >
+                              <template #bodyCell="{ column, record, index }">
+                                <template
+                                  v-if="column.dataIndex === 'coordinate'"
+                                >
+                                  <div
+                                    style="
+                                      display: flex;
+                                      justify-content: space-between;
+                                      align-items: center;
+                                    "
+                                  >
+                                    <span>{{ record.coordinate }}</span>
+                                    <div>
+                                      <a-button
+                                        type="link"
+                                        size="small"
+                                        @click.stop="handleEditCoordinate(record, index)"
+                                      >
+                                        <template #icon>
+                                          <component
+                                            :is="icons.EditOutlined"
+                                            style="color: #1890ff"
+                                          />
+                                        </template>
+                                      </a-button>
+                                      <a-button
+                                        type="link"
+                                        size="small"
+                                        @click.stop="handleDeleteCoordinate(record, index)"
+                                      >
+                                        <template #icon>
+                                          <component
+                                            :is="icons.DeleteOutlined"
+                                            style="color: #ff4d4f"
+                                          />
+                                        </template>
+                                      </a-button>
+                                    </div>
+                                  </div>
+                                </template>
+                              </template>
                             </a-table>
                           </div>
                         </div>
@@ -533,15 +589,57 @@
                           <!-- 怪物名列表 -->
                           <div style="flex: 1; overflow-y: auto">
                             <a-table
-                              :columns="[{ title: '', dataIndex: 'name', key: 'name' }]"
+                              :columns="[{ title: '怪物名', dataIndex: 'name', key: 'name', align: 'left' }]"
                               :data-source="coordinateNameList"
                               :pagination="false"
                               size="small"
-                              :showHeader="false"
-                              :rowClassName="(_record, index) => (selectedCoordinateNameIndex === index ? 'ant-table-row-selected' : '')"
-                              @row-click="(record, index) => selectCoordinateName(index)"
+                              :showHeader="true"
+                              :row-selection="{ 
+                                type: 'radio',
+                                selectedRowKeys: selectedCoordinateNameKeys, 
+                                onChange: onCoordinateNameSelectChange 
+                              }"
                               style="border: none"
                             >
+                              <template #bodyCell="{ column, record, index }">
+                                <template v-if="column.dataIndex === 'name'">
+                                  <div
+                                    style="
+                                      display: flex;
+                                      justify-content: space-between;
+                                      align-items: center;
+                                    "
+                                  >
+                                    <span>{{ record.name }}</span>
+                                    <div>
+                                      <a-button
+                                        type="link"
+                                        size="small"
+                                        @click.stop="handleEditCoordinateName(record, index)"
+                                      >
+                                        <template #icon>
+                                          <component
+                                            :is="icons.EditOutlined"
+                                            style="color: #1890ff"
+                                          />
+                                        </template>
+                                      </a-button>
+                                      <a-button
+                                        type="link"
+                                        size="small"
+                                        @click.stop="handleDeleteCoordinateName(record, index)"
+                                      >
+                                        <template #icon>
+                                          <component
+                                            :is="icons.DeleteOutlined"
+                                            style="color: #ff4d4f"
+                                          />
+                                        </template>
+                                      </a-button>
+                                    </div>
+                                  </div>
+                                </template>
+                              </template>
                             </a-table>
                           </div>
 
@@ -614,6 +712,7 @@
                         <!-- 坐标区域 -->
                         <div style="display: flex; margin-bottom: 8px">
                           <a-input
+                            v-model:value="newCoordinate"
                             placeholder="坐标"
                             style="width: 350px; margin-right: 8px"
                           />
@@ -1219,6 +1318,29 @@
             ]);
           },
         },
+        // 编辑图标
+        EditOutlined: {
+          render() {
+            return h("span", { class: "custom-icon" }, [
+              h(
+                "svg",
+                {
+                  viewBox: "64 64 896 896",
+                  focusable: "false",
+                  "data-icon": "edit",
+                  width: "1em",
+                  height: "1em",
+                  fill: "currentColor",
+                },
+                [
+                  h("path", {
+                    d: "M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z",
+                  }),
+                ]
+              ),
+            ]);
+          },
+        },
       };
 
       // 使用自定义图标
@@ -1232,6 +1354,7 @@
           const defaultRole2 = ref("门派");
           const username = ref("");
           const password = ref("");
+          const newScriptName = ref(""); // 添加这一行
           const expandedRowKeys = ref([]);
           const isModalVisible = ref(false);
           const currentRecord = ref(null);
@@ -1239,64 +1362,51 @@
           const activeTabKey = ref("1");
           const scriptTreeData = ref([
             {
-              title: "存仓.lua",
-              key: "1",
+              title: "新建文件夹1",
+              key: "folder-1",
+              children: [
+                {
+                  title: "存仓.lua",
+                  key: "1-1",
+                  isLeaf: true,
+                },
+                {
+                  title: "多任务模式.lua",
+                  key: "1-2",
+                  isLeaf: true,
+                },
+                {
+                  title: "琥珀实战任务.lua",
+                  key: "1-3",
+                  isLeaf: true,
+                },
+              ],
             },
             {
-              title: "多任务模式.lua",
-              key: "2",
-            },
-            {
-              title: "琥珀实战任务.lua",
-              key: "3",
-            },
-            {
-              title: "开拍实行任务.lua",
-              key: "4",
-            },
-            {
-              title: "蓝色飞行变身任务.lua",
-              key: "5",
-            },
-            {
-              title: "蓝色猎骑变身任务.lua",
-              key: "6",
-            },
-            {
-              title: "全自动1-23级蓝色号角合成.lua",
-              key: "7",
-            },
-            {
-              title: "全自动1-23级蓝色号角1件蓝装.lua",
-              key: "8",
-            },
-            {
-              title: "全自动1-26级蓝色号角2件蓝装.lua",
-              key: "9",
-            },
-            {
-              title: "任务 成长之书.lua",
-              key: "10",
-            },
-            {
-              title: "委托任务.lua",
-              key: "11",
-            },
-            {
-              title: "委托任务 材料任务.lua",
-              key: "12",
-            },
-            {
-              title: "小退 卡号黑屏专用.lua",
-              key: "13",
-            },
-            {
-              title: "支线任务.lua",
-              key: "14",
-            },
-            {
-              title: "主线任务.lua",
-              key: "15",
+              title: "新建文件夹2",
+              key: "folder-2",
+              children: [
+                {
+                  title: "开拍实行任务.lua",
+                  key: "2-1",
+                  isLeaf: true,
+                },
+                {
+                  title: "蓝色飞行变身任务.lua",
+                  key: "2-2",
+                  isLeaf: true,
+                },
+                {
+                  title: "蓝色猎骑变身任务.lua",
+                  key: "2-3",
+                  isLeaf: true,
+                },
+                {
+                  title: "全自动1-23级蓝色号角合成.lua",
+                  key: "2-4",
+                  isLeaf: true,
+                },
+              ],
             },
           ]);
 
@@ -1743,35 +1853,78 @@
 
           const selectedScriptKeys = ref([]);
 
+          const handleScriptSelect = (selectedKeys, info) => {
+            console.log("选中的节点信息:", info.node);
+            selectedScriptKeys.value = selectedKeys;
+
+            if (info.node.isLeaf) {
+              // 如果是脚本文件，加载其内容
+              currentScriptContent.value = `// ${info.node.title} 的内容\n`;
+            }
+          };
+
           const handleNewScript = () => {
-            // 弹出输入框让用户输入脚本名称
-            Modal.confirm({
-              title: "新建脚本文件",
-              content: h("div", {}, [
-                h("p", "请输入脚本文件名:"),
-                h(Input, {
-                  value: scriptNameInput.value,
-                  onChange: (e) => (scriptNameInput.value = e.target.value),
-                  placeholder: "例如: 新脚本.lua",
-                }),
-              ]),
-              onOk() {
-                if (!scriptNameInput.value) {
-                  message.error("请输入脚本文件名");
-                  return;
+            // 获取当前选中的节点
+            const selectedKey = selectedScriptKeys.value[0];
+            console.log("当前选中的key:", selectedKey);
+
+            if (!selectedKey) {
+              message.error("请先选择一个文件夹");
+              return;
+            }
+
+            // 在树数据中查找选中的节点
+            const findNode = (nodes) => {
+              for (const node of nodes) {
+                if (node.key === selectedKey) {
+                  return node;
                 }
-                // 添加新脚本到列表
-                const newScript = {
-                  title: scriptNameInput.value.endsWith(".lua")
-                    ? scriptNameInput.value
-                    : scriptNameInput.value + ".lua",
-                  key: (scriptTreeData.value.length + 1).toString(),
-                };
-                scriptTreeData.value.push(newScript);
-                message.success("新建脚本成功");
-                scriptNameInput.value = ""; // 清空输入
-              },
-            });
+                if (node.children) {
+                  const found = findNode(node.children);
+                  if (found) return found;
+                }
+              }
+              return null;
+            };
+
+            const selectedNode = findNode(scriptTreeData.value);
+            console.log("找到的节点:", selectedNode);
+
+            if (!selectedNode || selectedNode.isLeaf) {
+              message.error("请选择一个文件夹，而不是脚本文件");
+              return;
+            }
+
+            if (!newScriptName.value) {
+              message.error("请输入脚本文件名");
+              return;
+            }
+
+            const fileName = newScriptName.value.endsWith(".lua")
+              ? newScriptName.value
+              : newScriptName.value + ".lua";
+
+            // 生成新的key
+            const folderPrefix = selectedNode.key.split("-")[0];
+            const newKey = `${folderPrefix}-${
+              (selectedNode.children?.length || 0) + 1
+            }`;
+
+            // 创建新脚本对象
+            const newScript = {
+              title: fileName,
+              key: newKey,
+              isLeaf: true,
+            };
+
+            // 将新脚本添加到目标文件夹的children数组中
+            if (!selectedNode.children) {
+              selectedNode.children = [];
+            }
+            selectedNode.children.push(newScript);
+
+            message.success("新建脚本成功");
+            newScriptName.value = ""; // 清空输入
           };
 
           const handleDeleteScript = () => {
@@ -1779,18 +1932,44 @@
               message.warning("请先选择要删除的脚本");
               return;
             }
+
+            const selectedKey = selectedScriptKeys.value[0];
+
+            // 递归查找并删除脚本
+            const removeScript = (nodes) => {
+              for (let i = 0; i < nodes.length; i++) {
+                const node = nodes[i];
+                if (node.children) {
+                  // 在子节点中查找要删除的脚本
+                  const scriptIndex = node.children.findIndex(
+                    (child) => child.key === selectedKey
+                  );
+                  if (scriptIndex !== -1) {
+                    // 找到脚本，从children数组中删除
+                    node.children.splice(scriptIndex, 1);
+                    return true;
+                  }
+                  // 继续在子文件夹中查找
+                  if (removeScript(node.children)) {
+                    return true;
+                  }
+                }
+              }
+              return false;
+            };
+
             Modal.confirm({
               title: "确认删除",
               content: "确定要删除选中的脚本吗？此操作不可恢复。",
               okText: "确认",
               cancelText: "取消",
               onOk() {
-                // 从列表中删除选中的脚本
-                scriptTreeData.value = scriptTreeData.value.filter(
-                  (item) => !selectedScriptKeys.value.includes(item.key)
-                );
-                selectedScriptKeys.value = []; // 清空选中
-                message.success("删除脚本成功");
+                if (removeScript(scriptTreeData.value)) {
+                  selectedScriptKeys.value = []; // 清空选中
+                  message.success("删除脚本成功");
+                } else {
+                  message.error("删除脚本失败");
+                }
               },
             });
           };
@@ -1845,7 +2024,8 @@
 
           // 坐标操作方法
           const selectCoordinate = (index) => {
-            selectedCoordinateIndex.value = index;
+            selectedCoordinateIndex.value =
+              selectedCoordinateIndex.value === index ? -1 : index;
           };
 
           const addCoordinate = () => {
@@ -1863,24 +2043,40 @@
           };
 
           const deleteCoordinate = () => {
-            if (selectedCoordinateIndex.value === -1) {
+            if (selectedCoordinateKeys.value.length === 0) {
               message.warning("请先选择要删除的坐标");
               return;
             }
-            coordinateList.value.splice(selectedCoordinateIndex.value, 1);
-            // 重新生成key
-            coordinateList.value = coordinateList.value.map((item, index) => ({
-              ...item,
-              key: (index + 1).toString(),
-            }));
-            selectedCoordinateIndex.value = -1;
-            message.success("删除坐标成功");
+            const selectedKey = selectedCoordinateKeys.value[0];
+            const selectedItem = coordinateList.value.find(
+              (item) => item.key === selectedKey
+            );
+
+            Modal.confirm({
+              title: "确认删除",
+              content: `确定要删除坐标 "${selectedItem.coordinate}" 吗？`,
+              onOk() {
+                const index = coordinateList.value.findIndex(
+                  (item) => item.key === selectedKey
+                );
+                coordinateList.value.splice(index, 1);
+                // 重新生成key
+                coordinateList.value = coordinateList.value.map(
+                  (item, idx) => ({
+                    ...item,
+                    key: (idx + 1).toString(),
+                  })
+                );
+                selectedCoordinateKeys.value = []; // 清空选中
+                message.success("删除坐标成功");
+              },
+            });
           };
 
           const clearCoordinates = () => {
             Modal.confirm({
               title: "确认清空",
-              content: "确定要清空所有坐标吗？",
+              content: "确定要清空所有坐标吗？此操作不可恢复。",
               onOk() {
                 coordinateList.value = [];
                 selectedCoordinateIndex.value = -1;
@@ -1891,7 +2087,8 @@
 
           // 坐标名操作方法
           const selectCoordinateName = (index) => {
-            selectedCoordinateNameIndex.value = index;
+            selectedCoordinateNameIndex.value =
+              selectedCoordinateNameIndex.value === index ? -1 : index;
           };
 
           const addCoordinateName = () => {
@@ -1954,25 +2151,51 @@
               message.warning("请先选择要删除的坐标名");
               return;
             }
-            coordinateNameList.value.splice(
-              selectedCoordinateNameIndex.value,
-              1
-            );
-            // 重新生成key
-            coordinateNameList.value = coordinateNameList.value.map(
-              (item, index) => ({
-                ...item,
-                key: (index + 1).toString(),
-              })
-            );
-            selectedCoordinateNameIndex.value = -1;
-            message.success("删除坐标名成功");
+
+            const selectedName =
+              coordinateNameList.value[selectedCoordinateNameIndex.value].name;
+
+            Modal.confirm({
+              title: "删除确认",
+              content: h("div", {}, [
+                h("p", "您确定要删除这个怪物名吗？"),
+                h(
+                  "p",
+                  { style: "color: #ff4d4f; margin-top: 8px" },
+                  `怪物名称: "${selectedName}"`
+                ),
+                h(
+                  "p",
+                  { style: "color: #666; font-size: 12px; margin-top: 8px" },
+                  "删除后将无法恢复，请谨慎操作"
+                ),
+              ]),
+              okText: "确认删除",
+              okButtonProps: {
+                danger: true,
+              },
+              cancelText: "取消",
+              onOk() {
+                coordinateNameList.value.splice(
+                  selectedCoordinateNameIndex.value,
+                  1
+                );
+                coordinateNameList.value = coordinateNameList.value.map(
+                  (item, idx) => ({
+                    ...item,
+                    key: (idx + 1).toString(),
+                  })
+                );
+                message.success("删除怪物名成功");
+                selectedCoordinateNameIndex.value = -1;
+              },
+            });
           };
 
           const clearCoordinateNames = () => {
             Modal.confirm({
               title: "确认清空",
-              content: "确定要清空所有坐标名吗？",
+              content: "确定要清空所有坐标名吗？此操作不可恢复。",
               onOk() {
                 coordinateNameList.value = [];
                 selectedCoordinateNameIndex.value = -1;
@@ -2055,30 +2278,25 @@
 
           const currentScriptContent = ref("");
 
-          const handleScriptSelect = (selectedKeys, info) => {
-            if (selectedKeys.length > 0) {
-              // 这里可以根据选中的脚本文件加载其内容
-              const selectedScript = scriptTreeData.value.find(
-                (item) => item.key === selectedKeys[0]
-              );
-              if (selectedScript) {
-                currentScriptContent.value = `// ${selectedScript.title} 的内容\n`;
-              }
-            }
-          };
-
           // 修改坐标方法
           const modifyCoordinate = () => {
-            if (selectedCoordinateIndex.value === -1) {
+            if (selectedCoordinateKeys.value.length === 0) {
               message.warning("请先选择要修改的坐标");
               return;
             }
 
-            // 将选中的坐标填入输入框
-            newCoordinate.value =
-              coordinateList.value[selectedCoordinateIndex.value].coordinate;
+            const selectedKey = selectedCoordinateKeys.value[0];
+            const selectedItem = coordinateList.value.find(
+              (item) => item.key === selectedKey
+            );
 
-            // 弹出确认对话框
+            if (!selectedItem) {
+              message.error("未找到选中的坐标");
+              return;
+            }
+
+            newCoordinate.value = selectedItem.coordinate;
+
             Modal.confirm({
               title: "修改坐标",
               content: h("div", {}, [
@@ -2093,10 +2311,14 @@
                   message.error("坐标不能为空");
                   return;
                 }
-                // 更新坐标
-                coordinateList.value[selectedCoordinateIndex.value].coordinate =
-                  newCoordinate.value;
-                message.success("修改坐标成功");
+                const index = coordinateList.value.findIndex(
+                  (item) => item.key === selectedKey
+                );
+                if (index !== -1) {
+                  coordinateList.value[index].coordinate = newCoordinate.value;
+                  message.success("修改坐标成功");
+                  newCoordinate.value = "";
+                }
               },
             });
           };
@@ -2137,6 +2359,149 @@
             });
           };
 
+          // 编辑坐标方法
+          const handleEditCoordinate = (record, index) => {
+            selectedCoordinateIndex.value = index;
+            newCoordinate.value = record.coordinate;
+
+            Modal.confirm({
+              title: "修改坐标",
+              content: h("div", {}, [
+                h("p", "请修改坐标值:"),
+                h(Input, {
+                  value: newCoordinate.value,
+                  onChange: (e) => (newCoordinate.value = e.target.value),
+                }),
+              ]),
+              onOk() {
+                if (!newCoordinate.value) {
+                  message.error("坐标不能为空");
+                  return;
+                }
+                // 更新坐标
+                coordinateList.value[index].coordinate = newCoordinate.value;
+                message.success("修改坐标成功");
+                newCoordinate.value = ""; // 清空输入框
+                selectedCoordinateIndex.value = -1; // 清除选中状态
+              },
+              onCancel() {
+                newCoordinate.value = ""; // 清空输入框
+                selectedCoordinateIndex.value = -1; // 清除选中状态
+              },
+            });
+          };
+
+          // 删除坐标方法
+          const handleDeleteCoordinate = (record, index) => {
+            Modal.confirm({
+              title: "确认删除",
+              content: `确定要删除坐标 "${record.coordinate}" 吗？`,
+              onOk() {
+                coordinateList.value.splice(index, 1);
+                // 重新生成key
+                coordinateList.value = coordinateList.value.map(
+                  (item, idx) => ({
+                    ...item,
+                    key: (idx + 1).toString(),
+                  })
+                );
+                message.success("删除坐标成功");
+                selectedCoordinateIndex.value = -1; // 清除选中状态
+              },
+            });
+          };
+
+          const getRowClassName = (index) => {
+            return selectedCoordinateIndex.value === index
+              ? "ant-table-row-selected"
+              : "";
+          };
+
+          // 添加处理编辑怪物名的方法
+          const handleEditCoordinateName = (record, index) => {
+            selectedCoordinateNameIndex.value = index;
+            newCoordinateName.value = record.name;
+
+            Modal.confirm({
+              title: "修改怪物名",
+              content: h("div", {}, [
+                h("p", "请修改怪物名:"),
+                h(Input, {
+                  value: newCoordinateName.value,
+                  onChange: (e) => (newCoordinateName.value = e.target.value),
+                }),
+              ]),
+              onOk() {
+                if (!newCoordinateName.value) {
+                  message.error("怪物名不能为空");
+                  return;
+                }
+                coordinateNameList.value[index].name = newCoordinateName.value;
+                message.success("修改怪物名成功");
+                newCoordinateName.value = "";
+                selectedCoordinateNameIndex.value = -1;
+              },
+              onCancel() {
+                newCoordinateName.value = "";
+                selectedCoordinateNameIndex.value = -1;
+              },
+            });
+          };
+
+          // 添加处理删除怪物名的方法
+          const handleDeleteCoordinateName = (record, index) => {
+            Modal.confirm({
+              title: "删除确认",
+              content: h("div", {}, [
+                h("p", "您确定要删除这个怪物名吗？"),
+                h(
+                  "p",
+                  { style: "color: #ff4d4f; margin-top: 8px" },
+                  `怪物名称: "${record.name}"`
+                ),
+                h(
+                  "p",
+                  { style: "color: #666; font-size: 12px; margin-top: 8px" },
+                  "删除后将无法恢复，请谨慎操作"
+                ),
+              ]),
+              okText: "确认删除",
+              okButtonProps: {
+                danger: true,
+              },
+              cancelText: "取消",
+              onOk() {
+                coordinateNameList.value.splice(index, 1);
+                coordinateNameList.value = coordinateNameList.value.map(
+                  (item, idx) => ({
+                    ...item,
+                    key: (idx + 1).toString(),
+                  })
+                );
+                message.success("删除怪物名成功");
+                selectedCoordinateNameIndex.value = -1;
+              },
+            });
+          };
+
+          // 在 setup 函数中添加
+          const selectedCoordinateKeys = ref([]);
+
+          const onCoordinateSelectChange = (selectedKeys) => {
+            selectedCoordinateKeys.value = selectedKeys;
+            selectedCoordinateIndex.value =
+              selectedKeys.length > 0 ? selectedKeys[0] : -1;
+          };
+
+          // 在 setup 函数中添加
+          const selectedCoordinateNameKeys = ref([]);
+
+          const onCoordinateNameSelectChange = (selectedKeys) => {
+            selectedCoordinateNameKeys.value = selectedKeys;
+            selectedCoordinateNameIndex.value =
+              selectedKeys.length > 0 ? selectedKeys[0] - 1 : -1;
+          };
+
           // 返回模板需要使用的数据和方法
           return {
             activeTab,
@@ -2149,6 +2514,7 @@
             defaultRole2,
             username,
             password,
+            newScriptName, // 添加这一行
             handlePublish,
             handleAdd,
             handleBackup,
@@ -2175,6 +2541,7 @@
             activeTabKey,
             scriptTreeData,
             selectedScriptKeys,
+            handleScriptSelect,
             handleNewScript,
             handleDeleteScript,
             handleRunScript,
@@ -2188,7 +2555,6 @@
             itemContent,
             recordContent,
             currentScriptContent,
-            handleScriptSelect,
             coordinateList,
             coordinateNameList,
             selectedCoordinateIndex,
@@ -2214,6 +2580,15 @@
             copyNameList,
             modifyCoordinate,
             modifyCoordinateName,
+            handleEditCoordinate,
+            handleDeleteCoordinate,
+            getRowClassName,
+            handleEditCoordinateName,
+            handleDeleteCoordinateName,
+            selectedCoordinateKeys,
+            onCoordinateSelectChange,
+            selectedCoordinateNameKeys,
+            onCoordinateNameSelectChange,
           };
         },
       });
