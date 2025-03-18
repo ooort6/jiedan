@@ -25,7 +25,7 @@ ROBOT_WEBHOOK_3 = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=742b0a2b
 # Tushare API
 try:
     import chinadata.ca_data as ts
-    pro = ts.pro_api('ndd07f13a9e334456a6694056e146afed04')
+    pro = ts.pro_api('20240522230128-32448e93-7346-498a-b3e0-6f45a0031b1d')
                       
     # 设置API URL
     pro._DataApi__http_url = 'http://tsapi.majors.ltd:7000'
