@@ -431,25 +431,21 @@
         </div>
 
         <div class="table-container">
-          <table id="stockTable">
+          <table>
             <thead>
               <tr>
                 <th>股票名称</th>
-                <th>主力净量</th>
                 <th>昨日涨幅</th>
-                <th>开盘价</th>
-                <th>收盘价</th>
-                <th>换手率</th>
-                <th>5日均价</th>
-                <th>10日均价</th>
+                <th>昨日收盘价</th>
+                <th>今日涨幅</th>
                 <th>当前价格</th>
                 <th>监控价格</th>
                 <th>备注</th>
                 <th>操作</th>
               </tr>
             </thead>
-            <tbody id="stockList">
-              <!-- 股票数据将通过JavaScript动态添加 -->
+            <tbody id="stockTableBody">
+              <!-- 数据将通过 JavaScript 动态填充 -->
             </tbody>
           </table>
         </div>
@@ -805,7 +801,7 @@
 
       // 渲染股票表格
       function renderStockTable(data) {
-        const stockList = document.getElementById("stockList");
+        const stockList = document.getElementById("stockTableBody");
         stockList.innerHTML = "";
 
         if (data.length === 0) {
@@ -847,15 +843,11 @@
             <td><strong>${stock.name}</strong><br><small>${
             stock.code
           }</small></td>
-            <td>${formatMainForceNet(stock.main_force_net)}</td>
             <td class="${yesterdayChangeClass}">${formatNumber(
             stock.yesterday_change || 0
           )}%</td>
-            <td>${formatNumber(stock.open_price || 0)}</td>
             <td>${formatNumber(stock.close_price || 0)}</td>
-            <td>${formatNumber(stock.turnover_rate || 0)}%</td>
-            <td>${formatNumber(stock.ma5 || 0)}</td>
-            <td>${formatNumber(stock.ma10 || 0)}</td>
+            <td>${formatNumber(stock.today_change || 0)}%</td>
             <td class="${priceClass}">${currentPriceDisplay}</td>
             <td>
               <input type="number" class="monitor-price-input" data-code="${
@@ -863,6 +855,7 @@
               }" 
                 value="${stock.monitor_price}" step="0.01">
             </td>
+            <td>${stock.note || ""}</td>
             <td>
               <button class="action-btn update-btn" data-code="${stock.code}">
                 <i class="bi bi-pencil"></i> 修改

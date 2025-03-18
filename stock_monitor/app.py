@@ -6,6 +6,7 @@ import requests
 import time
 import threading
 import logging
+from stock_api import get_stock_data, test_api, verify_stock
 
 app = Flask(__name__)
 
@@ -22,26 +23,11 @@ ROBOT_WEBHOOK_1 = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=2d893fc9
 ROBOT_WEBHOOK_2 = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=b58a54a1-a744-43fd-9a78-767ca478053b'  # 监控均线机器人
 ROBOT_WEBHOOK_3 = 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=742b0a2b-bc4c-4ffd-a080-c943114f3a5b'  # 3号机器人
 
-# Tushare API
-try:
-    import chinadata.ca_data as ts
-    pro = ts.pro_api('20240522230128-32448e93-7346-498a-b3e0-6f45a0031b1d')
-                      
-    # 设置API URL
-    pro._DataApi__http_url = 'http://tsapi.majors.ltd:7000'
-    
-    # 测试API是否可用
-    test_result = pro.daily(ts_code='000001.SZ')
-    if isinstance(test_result, str) and "token无效" in test_result:
-        logger.error(f"Tushare API token无效: {test_result}")
-        ts = None
-        pro = None
-    else:
-        logger.info("成功初始化Tushare API")
-except Exception as e:
-    logger.error(f"初始化Tushare API失败: {e}")
-    ts = None
-    pro = None
+# 测试API是否可用
+if test_api():
+    logger.info("股票数据 API 初始化成功")
+else:
+    logger.error("股票数据 API 初始化失败")
 
 # 全局变量，用于控制监控线程
 monitoring = False
@@ -63,7 +49,7 @@ def load_ma_stocks():
     """从文件加载均线监控股票数据"""
     if os.path.exists(MA_STOCKS_FILE):
         with open(MA_STOCKS_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        return json.load(f)
     return []
 
 def save_ma_stocks(stocks):
@@ -87,108 +73,9 @@ def is_trading_time():
 
 def get_stock_data(code):
     """获取股票数据"""
-    if pro is None:
-        logger.warning(f"使用模拟数据代替实际股票 {code} 数据")
-        # 返回模拟数据
-        return {
-            'current_price': 100.0,
-            'open_price': 99.0,
-            'close_price': 100.0,
-            'turnover_rate': 2.5,
-            'main_force_net': '暂无数据',
-            'ma5': 98.0,
-            'ma10': 97.0,
-            'today_change': 1.0,
-            'yesterday_change': 0.5,
-            'amount': 10000.0  # 成交额（万元）
-        }
-    
     try:
-        # 转换股票代码格式
-        ts_code = convert_to_tushare_code(code)
-        
-        # 获取当前日期
-        today = datetime.now().strftime('%Y%m%d')
-        
-        # 获取最近交易日数据
-        df_daily = pro.daily(ts_code=ts_code)
-        
-        # 检查返回的数据类型
-        if isinstance(df_daily, str):
-            logger.warning(f"获取股票 {code} 数据返回字符串: {df_daily}")
-            # 返回模拟数据
-            return {
-                'current_price': 100.0,
-                'open_price': 99.0,
-                'close_price': 100.0,
-                'turnover_rate': 2.5,
-                'main_force_net': '暂无数据',
-                'ma5': 98.0,
-                'ma10': 97.0,
-                'today_change': 1.0,
-                'yesterday_change': 0.5,
-                'amount': 10000.0  # 成交额（万元）
-            }
-        
-        # 检查DataFrame是否为空
-        if hasattr(df_daily, 'empty') and df_daily.empty:
-            logger.warning(f"未获取到股票 {code} 的数据")
-            return None
-        
-        # 获取最新一天的数据
-        latest_data = df_daily.iloc[0]
-        
-        # 获取前一天的数据（如果有）
-        prev_data = df_daily.iloc[1] if len(df_daily) > 1 else None
-        
-        # 计算涨跌幅
-        today_change = 0
-        if prev_data is not None:
-            today_change = (latest_data['close'] - prev_data['close']) / prev_data['close'] * 100
-        
-        # 计算5日和10日均线
-        ma5 = df_daily['close'].iloc[:5].mean() if len(df_daily) >= 5 else 0
-        ma10 = df_daily['close'].iloc[:10].mean() if len(df_daily) >= 10 else 0
-        
-        # 获取主力净量数据
-        try:
-            df_moneyflow = pro.moneyflow(ts_code=ts_code)
-            if isinstance(df_moneyflow, str):
-                logger.warning(f"获取主力净量数据返回字符串: {df_moneyflow}")
-                main_force_net = '暂无数据'
-            elif hasattr(df_moneyflow, 'empty') and not df_moneyflow.empty:
-                main_force_net = df_moneyflow['net_mf_amount'].iloc[0]
-            else:
-                main_force_net = '暂无数据'
-        except Exception as e:
-            logger.error(f"获取主力净量数据失败: {e}")
-            main_force_net = '暂无数据'
-        
-        # 获取实时价格（如果在交易时间内）
-        current_price = latest_data['close']
-        if is_trading_time():
-            try:
-                # 获取实时行情
-                df_realtime = ts.get_realtime_quotes(ts_code.split('.')[0])
-                if isinstance(df_realtime, str):
-                    logger.warning(f"获取实时价格返回字符串: {df_realtime}")
-                elif hasattr(df_realtime, 'empty') and not df_realtime.empty:
-                    current_price = float(df_realtime['price'].iloc[0])
-            except Exception as e:
-                logger.error(f"获取实时价格失败: {e}")
-        
-        return {
-            'current_price': float(current_price),
-            'open_price': float(latest_data['open']),
-            'close_price': float(latest_data['close']),
-            'turnover_rate': float(latest_data.get('turnover', 0)),
-            'main_force_net': main_force_net,
-            'ma5': round(float(ma5), 2),
-            'ma10': round(float(ma10), 2),
-            'today_change': round(float(today_change), 2),
-            'yesterday_change': round(float(latest_data.get('pct_chg', 0)), 2),
-            'amount': float(latest_data['amount']) / 1000  # 成交额（万元）
-        }
+        from stock_api import get_stock_data as api_get_stock_data
+        return api_get_stock_data(code)
     except Exception as e:
         logger.error(f"获取股票 {code} 数据失败: {e}")
         return None
@@ -239,16 +126,10 @@ def monitor_stocks():
     # 发送系统启动通知
     startup_message = "📢 股票监控系统已启动\n"
     startup_message += f"⏰ 启动时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+    startup_message += "🔄 监控频率: 每30秒刷新一次\n"
     
     # 获取监控的股票列表
-    price_stocks = load_stocks()
     ma_stocks = load_ma_stocks()
-    
-    if price_stocks:
-        startup_message += "\n🔍 价格监控股票列表:\n"
-        for stock in price_stocks:
-            note = f"（{stock['note']}）" if stock.get('note') else ""
-            startup_message += f"- {stock['name']}{note} 监控价格: {stock['monitor_price']}\n"
     
     if ma_stocks:
         startup_message += "\n📊 均线监控股票列表:\n"
@@ -256,13 +137,12 @@ def monitor_stocks():
             note = f"（{stock['note']}）" if stock.get('note') else ""
             startup_message += f"- {stock['name']}{note}\n"
     
-    # 只发送到第一个群，避免频率限制
-    send_wecom_message(ROBOT_WEBHOOK_1, startup_message)
+    # 发送到2号机器人
+    send_wecom_message(ROBOT_WEBHOOK_2, startup_message)
     
     # 记录已经发送过预警的股票，避免重复发送
-    price_alerted = set()
-    ma5_alerted = set()
-    ma10_alerted = set()
+    ma5_alerted = {}
+    ma10_alerted = {}
     
     # 记录最后一次发送消息的时间
     last_message_time = datetime.now() - timedelta(minutes=5)
@@ -271,72 +151,68 @@ def monitor_stocks():
     while monitoring:
         try:
             # 重新加载股票列表，以获取最新的监控配置
-            price_stocks = load_stocks()
             ma_stocks = load_ma_stocks()
             
             # 只在交易时间内进行监控
             if is_trading_time():
                 logger.info("当前为交易时间，开始检查股票数据...")
                 
-                # 监控价格
-                for stock in price_stocks:
-                    try:
-                        data = get_stock_data(stock['code'])
-                        if data:
-                            # 检查价格是否低于监控价格
-                            if data['current_price'] < stock['monitor_price']:
-                                alert_key = f"{stock['code']}_{stock['monitor_price']}"
-                                if alert_key not in price_alerted:
-                                    # 检查消息发送频率
-                                    current_time = datetime.now()
-                                    if (current_time - last_message_time).total_seconds() < 60:
-                                        logger.info("消息发送过于频繁，跳过本次发送")
-                                        continue
-                                        
-                                    note = f"（{stock['note']}）" if stock.get('note') else ""
-                                    message = f"⚠️ 价格预警\n股票: {stock['name']}{note}\n当前价格: {data['current_price']}\n监控价格: {stock['monitor_price']}\n时间: {datetime.now().strftime('%H:%M:%S')}"
-                                    if send_wecom_message(ROBOT_WEBHOOK_1, message):
-                                        price_alerted.add(alert_key)
-                                        last_message_time = current_time
-                    except Exception as e:
-                        logger.error(f"监控股票 {stock['name']} 价格异常: {e}")
-                
                 # 监控均线
                 for stock in ma_stocks:
                     try:
                         data = get_stock_data(stock['code'])
                         if data:
+                            current_time = datetime.now()
+                            
                             # 检查价格是否低于5日均线
                             if data['current_price'] < data['ma5']:
-                                alert_key = f"{stock['code']}_ma5_{datetime.now().strftime('%Y%m%d')}"
-                                if alert_key not in ma5_alerted:
-                                    # 检查消息发送频率
-                                    current_time = datetime.now()
-                                    if (current_time - last_message_time).total_seconds() < 60:
-                                        logger.info("消息发送过于频繁，跳过本次发送")
-                                        continue
-                                        
-                                    note = f"（{stock['note']}）" if stock.get('note') else ""
-                                    message = f"📉 均线预警\n股票: {stock['name']}{note}\n当前价格: {data['current_price']}\n5日均线: {data['ma5']}\n低于5日均线: {round(data['ma5'] - data['current_price'], 2)}\n时间: {datetime.now().strftime('%H:%M:%S')}"
-                                    if send_wecom_message(ROBOT_WEBHOOK_2, message):
-                                        ma5_alerted.add(alert_key)
-                                        last_message_time = current_time
+                                # 每天每只股票最多发送3次预警
+                                today = current_time.strftime('%Y%m%d')
+                                alert_key = f"{stock['code']}_ma5_{today}"
+                                alert_count = ma5_alerted.get(alert_key, 0)
+                                
+                                if alert_count < 3:
+                                    # 确保消息发送间隔至少1分钟
+                                    if (current_time - last_message_time).total_seconds() >= 60:
+                                        note = f"（{stock['note']}）" if stock.get('note') else ""
+                                        message = (
+                                            f"📉 五日均线预警\n"
+                                            f"股票: {stock['name']}{note}\n"
+                                            f"当前价格: {data['current_price']}\n"
+                                            f"5日均线: {data['ma5']}\n"
+                                            f"低于5日均线: {round(data['ma5'] - data['current_price'], 2)}\n"
+                                            f"换手率: {data['turnover_rate']}%\n"
+                                            f"成交额: {data['amount']}万\n"
+                                            f"时间: {data['update_time']}"
+                                        )
+                                        if send_wecom_message(ROBOT_WEBHOOK_2, message):
+                                            ma5_alerted[alert_key] = alert_count + 1
+                                            last_message_time = current_time
                             
                             # 检查价格是否低于10日均线
                             if data['current_price'] < data['ma10']:
-                                alert_key = f"{stock['code']}_ma10_{datetime.now().strftime('%Y%m%d')}"
-                                if alert_key not in ma10_alerted:
-                                    # 检查消息发送频率
-                                    current_time = datetime.now()
-                                    if (current_time - last_message_time).total_seconds() < 60:
-                                        logger.info("消息发送过于频繁，跳过本次发送")
-                                        continue
-                                        
-                                    note = f"（{stock['note']}）" if stock.get('note') else ""
-                                    message = f"📉 均线预警\n股票: {stock['name']}{note}\n当前价格: {data['current_price']}\n10日均线: {data['ma10']}\n低于10日均线: {round(data['ma10'] - data['current_price'], 2)}\n时间: {datetime.now().strftime('%H:%M:%S')}"
-                                    if send_wecom_message(ROBOT_WEBHOOK_2, message):
-                                        ma10_alerted.add(alert_key)
-                                        last_message_time = current_time
+                                # 每天每只股票最多发送3次预警
+                                today = current_time.strftime('%Y%m%d')
+                                alert_key = f"{stock['code']}_ma10_{today}"
+                                alert_count = ma10_alerted.get(alert_key, 0)
+                                
+                                if alert_count < 3:
+                                    # 确保消息发送间隔至少1分钟
+                                    if (current_time - last_message_time).total_seconds() >= 60:
+                                        note = f"（{stock['note']}）" if stock.get('note') else ""
+                                        message = (
+                                            f"📉 十日均线预警\n"
+                                            f"股票: {stock['name']}{note}\n"
+                                            f"当前价格: {data['current_price']}\n"
+                                            f"10日均线: {data['ma10']}\n"
+                                            f"低于10日均线: {round(data['ma10'] - data['current_price'], 2)}\n"
+                                            f"换手率: {data['turnover_rate']}%\n"
+                                            f"成交额: {data['amount']}万\n"
+                                            f"时间: {data['update_time']}"
+                                        )
+                                        if send_wecom_message(ROBOT_WEBHOOK_2, message):
+                                            ma10_alerted[alert_key] = alert_count + 1
+                                            last_message_time = current_time
                     except Exception as e:
                         logger.error(f"监控股票 {stock['name']} 均线异常: {e}")
             else:
@@ -403,6 +279,10 @@ def add_stock():
     if any(s['code'] == data['code'] for s in stocks):
         return jsonify({'success': False, 'message': '股票已存在'})
     
+    # 验证股票代码和名称是否匹配
+    if not verify_stock(data['code'], data['name']):
+        return jsonify({'success': False, 'message': '股票代码和名称不匹配'})
+    
     # 添加新股票
     new_stock = {
         'code': data['code'],
@@ -412,7 +292,7 @@ def add_stock():
     }
     
     stocks.append(new_stock)
-    save_stocks(stocks)
+        save_stocks(stocks)
     
     # 简化消息内容，减少API调用
     try:
@@ -510,6 +390,10 @@ def add_ma_stock():
     # 检查是否已存在
     if any(s['code'] == data['code'] for s in stocks):
         return jsonify({'success': False, 'message': '股票已存在'})
+    
+    # 验证股票代码和名称是否匹配
+    if not verify_stock(data['code'], data['name']):
+        return jsonify({'success': False, 'message': '股票代码和名称不匹配'})
     
     # 添加新股票
     new_stock = {
@@ -612,13 +496,38 @@ def send_alert():
     else:
         return jsonify({'success': False, 'message': '发送预警失败'})
 
+@app.route('/api/test_data')
+def test_data():
+    """测试接口，获取平安银行(000001)的数据"""
+    try:
+        data = get_stock_data('000001')
+        if data:
+            return jsonify({
+                'code': 200,
+                'message': '获取数据成功',
+                'data': data
+            })
+        else:
+            return jsonify({
+                'code': 500,
+                'message': '获取数据失败',
+                'data': None
+            })
+    except Exception as e:
+        logger.error(f"获取测试数据异常: {e}")
+        return jsonify({
+            'code': 500,
+            'message': f'获取数据异常: {str(e)}',
+            'data': None
+        })
+
 if __name__ == '__main__':
     # 启动监控线程
     start_monitoring()
     
     try:
         # 使用兼容的参数
-        app.run(debug=True, host='0.0.0.0', port=8080, threaded=True)
+        app.run(debug=True, host='0.0.0.0', port=8080)
     finally:
         # 确保在应用关闭时停止监控线程
         stop_monitoring() 
