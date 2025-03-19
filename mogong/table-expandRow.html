@@ -1,124 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>可展开表格示例</title>
+    <script src="https://unpkg.com/vue@3.4.27/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/dayjs/dayjs.min.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/customParseFormat.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/weekday.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/localeData.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/weekOfYear.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/weekYear.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/advancedFormat.js"></script>
+    <script src="https://unpkg.com/dayjs/plugin/quarterOfYear.js"></script>
+    <link
+      type="text/css"
+      href="https://unpkg.com/ant-design-vue@4.2.3/dist/reset.css"
+      media="screen"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/ant-design-vue@4.2.3/dist/antd.min.js"></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>可展开表格示例</title>
-  <script src="https://unpkg.com/vue@3.4.27/dist/vue.global.prod.js"></script>
-  <script src="https://unpkg.com/dayjs/dayjs.min.js"></script>
-  <script src="https://unpkg.com/dayjs/plugin/customParseFormat.js"></script>
-  <script src="https://unpkg.com/dayjs/plugin/weekday.js"></script>
-  <script src="https://unpkg.com/dayjs/plugin/localeData.js"></script>
-  <script src="https://unpkg.com/dayjs/plugin/weekOfYear.js"></script>
-  <script src="https://unpkg.com/dayjs/plugin/weekYear.js"></script>
-  <script src="https://unpkg.com/dayjs/plugin/advancedFormat.js"></script>
-  <script src="https://unpkg.com/dayjs/plugin/quarterOfYear.js"></script>
-  <link type="text/css" href="https://unpkg.com/ant-design-vue@4.2.3/dist/reset.css" media="screen" rel="stylesheet" />
-  <script src="https://unpkg.com/ant-design-vue@4.2.3/dist/antd.min.js"></script>
-</head>
+  <body>
+    <div id="app">
+      <my-component></my-component>
+    </div>
 
-<body>
-  <div id="app">
+    <script>
+      const { createApp, ref } = Vue;
 
-  </div>
-
-  <script>
-    const { createApp, ref } = Vue;
-
-    const app = createApp({
-      setup() {
-
+      const app = createApp({
+        setup() {},
         // 表格列配置
-        const columns = [
-          {
-            title: "姓名",
-            dataIndex: "name",
-            key: "name",
-          },
-          {
-            title: "年龄",
-            dataIndex: "age",
-            key: "age",
-            width: 80,
-          },
-          {
-            title: "地址",
-            dataIndex: "address",
-            key: "address",
-          },
-          {
-            title: "操作",
-            key: "action",
-            width: 200,
-            align: "center",
-          },
-        ];
+      });
 
-        // 表格数据
-        const data = [
-          {
-            key: 1,
-            name: "张三",
-            age: 32,
-            address: "北京市朝阳区xxx街道",
-            description: "这是张三的详细信息，包括工作经历、教育背景等...",
-            expandData: [
-              { label: "入职时间", value: "2020-01-01" },
-              { label: "所属部门", value: "技术部" },
-              { label: "职位", value: "高级工程师" },
-            ],
-          },
-          {
-            key: 2,
-            name: "李四",
-            age: 28,
-            address: "上海市浦东新区xxx路",
-            description: "这是李四的详细信息，包括工作经历、教育背景等...",
-            expandData: [
-              { label: "入职时间", value: "2021-03-15" },
-              { label: "所属部门", value: "产品部" },
-              { label: "职位", value: "产品经理" },
-            ],
-          },
-        ];
+      app.component("my-component", {
+        setup() {
+          const columns = [
+            {
+              title: "姓名",
+              dataIndex: "name",
+              key: "name",
+            },
+            {
+              title: "年龄",
+              dataIndex: "age",
+              key: "age",
+              width: 80,
+            },
+            {
+              title: "地址",
+              dataIndex: "address",
+              key: "address",
+            },
+            {
+              title: "操作",
+              key: "action",
+              width: 200,
+              align: "center",
+            },
+          ];
 
+          // 表格数据
+          const data = [
+            {
+              key: 1,
+              name: "张三",
+              age: 32,
+              address: "北京市朝阳区xxx街道",
+              description: "这是张三的详细信息，包括工作经历、教育背景等...",
+              expandData: [
+                { label: "入职时间", value: "2020-01-01" },
+                { label: "所属部门", value: "技术部" },
+                { label: "职位", value: "高级工程师" },
+              ],
+            },
+            {
+              key: 2,
+              name: "李四",
+              age: 28,
+              address: "上海市浦东新区xxx路",
+              description: "这是李四的详细信息，包括工作经历、教育背景等...",
+              expandData: [
+                { label: "入职时间", value: "2021-03-15" },
+                { label: "所属部门", value: "产品部" },
+                { label: "职位", value: "产品经理" },
+              ],
+            },
+          ];
 
-        // 展开的行的key
-        const expandedKeys = ref([1]);
+          // 展开的行的key
+          const expandedKeys = ref([1]);
 
+          // 切换展开状态
+          const toggleExpand = (record) => {
+            const key = record.key;
+            const index = expandedKeys.value.indexOf(key);
+            if (index > -1) {
+              expandedKeys.value.splice(index, 1);
+            } else {
+              expandedKeys.value.push(key);
+            }
+          };
 
-        // 切换展开状态
-        const toggleExpand = (record) => {
-          const key = record.key;
-          const index = expandedKeys.value.indexOf(key);
-          if (index > -1) {
-            expandedKeys.value.splice(index, 1);
-          } else {
-            expandedKeys.value.push(key);
-          }
-        };
+          // 编辑按钮点击事件
+          const handleEdit = (record) => {
+            console.log("编辑:", record);
+          };
 
-        // 编辑按钮点击事件
-        const handleEdit = (record) => {
-          console.log("编辑:", record);
-        };
+          // 删除按钮点击事件
+          const handleDelete = (record) => {
+            console.log("删除:", record);
+          };
 
-        // 删除按钮点击事件
-        const handleDelete = (record) => {
-          console.log("删除:", record);
-        };
-
-        return {
-          columns,
-          data,
-          expandedKeys,
-          handleEdit,
-          handleDelete,
-        };
-      },
-      template: `
+          return {
+            columns,
+            data,
+            expandedKeys,
+            handleEdit,
+            handleDelete,
+          };
+        },
+        template: `
           <div style="padding: 24px">
               <h2>可展开表格示例</h2>
               <a-table :columns="columns" :data-source="data" :expand-column-width="100"
@@ -149,11 +154,10 @@
                     </template>
                 </a-table>
           </div>          
-      `
-    });
+      `,
+      });
 
-    app.use(antd).mount("#app");
-  </script>
-</body>
-
+      app.use(antd).mount("#app");
+    </script>
+  </body>
 </html>
