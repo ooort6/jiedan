@@ -16,7 +16,10 @@
     <script src="https://unpkg.com/dayjs/plugin/quarterOfYear.js"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://unpkg.com/element-plus"></script>
-    <link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css">
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-plus/dist/index.css"
+    />
     <link
       type="text/css"
       href="https://unpkg.com/ant-design-vue@4.2.3/dist/reset.css"
@@ -27,16 +30,16 @@
 
     <!-- 使用内联SVG图标替代图标库 -->
     <style>
-         .demo-table {
-            margin: 20px;
-        }
-        .expand-row {
-            padding: 20px;
-            background-color: #f5f7fa;
-        }
-        .detail-item {
-            margin-bottom: 10px;
-        }
+      .demo-table {
+        margin: 20px;
+      }
+      .expand-row {
+        padding: 20px;
+        background-color: #f5f7fa;
+      }
+      .detail-item {
+        margin-bottom: 10px;
+      }
       /* 自定义图标样式 */
       .custom-icon {
         display: inline-flex;
@@ -929,38 +932,51 @@
                 <!-- 表格 -->
                 <div id="appTable">
                   <div class="demo-table">
-                    <el-table
-                        :data="tableData"
-                        style="width: 100%">
-                        <el-table-column type="expand">
-                            <template #default="props">
-                                <div class="expand-row">
-                                    <div class="detail-item">
-                                        <strong>详细地址：</strong> {{ props.row.address }}
-                                    </div>
-                                 
-                                </div>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="日期" prop="date"></el-table-column>
-                        <el-table-column label="姓名" prop="name"></el-table-column>
-                        <el-table-column label="城市" prop="city"></el-table-column>
-                        <el-table-column label="状态">
-                            <template #default="scope">
-                                <el-tag :type="scope.row.state === '成功' ? 'success' : 'warning'">
-                                    {{ scope.row.state }}
-                                </el-tag>
-                            </template>
-                        </el-table-column>
-                        <el-table-column label="操作" width="120">
-                            <template #default="scope">
-                                <el-button type="primary" size="small" @click="handlePublish(scope.row)">
-                                    Publish
-                                </el-button>
-                            </template>
-                        </el-table-column>
+                    <el-table :data="tableData" style="width: 100%">
+                      <el-table-column type="expand">
+                        <template #default="props">
+                          <div class="expand-row">
+                            <div class="detail-item">
+                              <strong>详细地址：</strong> {{ props.row.address
+                              }}
+                            </div>
+                          </div>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        label="日期"
+                        prop="date"
+                      ></el-table-column>
+                      <el-table-column
+                        label="姓名"
+                        prop="name"
+                      ></el-table-column>
+                      <el-table-column
+                        label="城市"
+                        prop="city"
+                      ></el-table-column>
+                      <el-table-column label="状态">
+                        <template #default="scope">
+                          <el-tag
+                            :type="scope.row.state === '成功' ? 'success' : 'warning'"
+                          >
+                            {{ scope.row.state }}
+                          </el-tag>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="操作" width="120">
+                        <template #default="scope">
+                          <el-button
+                            type="primary"
+                            size="small"
+                            @click="handlePublish(scope.row)"
+                          >
+                            Publish
+                          </el-button>
+                        </template>
+                      </el-table-column>
                     </el-table>
-                </div>
+                  </div>
                 </div>
                 <!-- 添加信息 -->
                 <a-form layout="inline">
@@ -1403,38 +1419,43 @@
 
       // 使用自定义图标
       const iconsLoaded = true;
-     
+
       const app = createApp({
         setup() {
+          const { nextTick } = Vue;
+
+          // 用于存储游戏路径
+          const user = ref("");
+
           const tableData = ref([
-                    {
-                        date: '2024-03-16',
-                        name: '张三',
-                        city: '上海',
-                        state: '成功',
-                        address: '上海市浦东新区陆家嘴金融贸易区',
-                        phone: '13800138000',
-                        notes: '重要客户，优先处理'
-                    },
-                    {
-                        date: '2024-03-15',
-                        name: '李四',
-                        city: '北京',
-                        state: '处理中',
-                        address: '北京市朝阳区建国路88号',
-                        phone: '13900139000',
-                        notes: '需要跟进'
-                    },
-                    {
-                        date: '2024-03-14',
-                        name: '王五',
-                        city: '广州',
-                        state: '成功',
-                        address: '广州市天河区珠江新城',
-                        phone: '13700137000',
-                        notes: '常规订单'
-                    }
-                ]);
+            {
+              date: "2024-03-16",
+              name: "张三",
+              city: "上海",
+              state: "成功",
+              address: "上海市浦东新区陆家嘴金融贸易区",
+              phone: "13800138000",
+              notes: "重要客户，优先处理",
+            },
+            {
+              date: "2024-03-15",
+              name: "李四",
+              city: "北京",
+              state: "处理中",
+              address: "北京市朝阳区建国路88号",
+              phone: "13900139000",
+              notes: "需要跟进",
+            },
+            {
+              date: "2024-03-14",
+              name: "王五",
+              city: "广州",
+              state: "成功",
+              address: "广州市天河区珠江新城",
+              phone: "13700137000",
+              notes: "常规订单",
+            },
+          ]);
           const activeTab = ref("1");
           const onlineUsers = ref(132);
           const defaultRole = ref("默认角色");
@@ -1753,22 +1774,216 @@
           };
 
           const handleAdd = () => {
-            const newKey = (dataSource.length + 1).toString();
-            const newRecord = {
-              key: newKey,
-              name: username.value || "New User",
-              platform: "iOS",
-              version: "10.3.4.5654",
-              upgraded: 500,
-              creator: "Jack",
-              date: "2014-12-24 23:12:00",
-              action: "Publish",
-            };
-            dataSource.push(newRecord);
-            message.success("添加成功");
-            // 清空输入框
-            username.value = "";
-            password.value = "";
+            // 定位下拉框的值
+            if (!defaultRole.value || !defaultRole2.value) {
+              message.warning("请先选择角色类型和门派/玩家类型");
+              return;
+            }
+
+            console.log(
+              `定位到的下拉框值 - 角色类型: ${defaultRole.value}, 类型: ${defaultRole2.value}`
+            );
+
+            // 打开脚本设置模态框
+            isModalVisible.value = true;
+
+            // 根据选择的下拉框值来展开相应的脚本树节点
+            nextTick(() => {
+              let folderKey = "";
+              let scriptKey = "";
+              let scriptName = "";
+
+              // 根据选择的角色和类型来预选脚本
+              if (
+                defaultRole.value === "默认角色" &&
+                defaultRole2.value === "门派"
+              ) {
+                folderKey = "folder-1";
+                scriptKey = "1-1";
+                scriptName = "存仓.lua";
+              } else if (
+                defaultRole.value === "默认角色" &&
+                defaultRole2.value === "玩家"
+              ) {
+                folderKey = "folder-1";
+                scriptKey = "1-2";
+                scriptName = "多任务模式.lua";
+              } else if (
+                defaultRole.value === "特殊角色" &&
+                defaultRole2.value === "门派"
+              ) {
+                folderKey = "folder-1";
+                scriptKey = "1-3";
+                scriptName = "琥珀实战任务.lua";
+              } else if (
+                defaultRole.value === "特殊角色" &&
+                defaultRole2.value === "玩家"
+              ) {
+                folderKey = "folder-2";
+                scriptKey = "2-1";
+                scriptName = "开拍实行任务.lua";
+              }
+
+              // 先展开对应的文件夹
+              selectedScriptKeys.value = [folderKey, scriptKey];
+
+              // 选择对应的脚本文件
+              selectedFileName.value = scriptName;
+              selectedScriptFile.value = scriptName;
+
+              // 更新路径信息
+              user.value = `${defaultRole.value}/${defaultRole2.value}`;
+
+              // 根据脚本名称设置不同的脚本内容示例
+              // 使用查找方法找到对应的脚本节点
+              let scriptContent = "";
+              if (scriptName === "存仓.lua") {
+                scriptContent = `-- 存仓.lua
+-- 这是默认角色门派脚本
+-- 功能：自动存仓功能
+function main()
+  -- 打开仓库界面
+  openRepository()
+  -- 循环检查物品
+  checkItems()
+  -- 存放物品
+  storeItems()
+  return 0
+end
+
+function openRepository()
+  -- 打开仓库代码
+  print("打开仓库...")
+end
+
+function checkItems()
+  -- 检查物品代码
+  print("检查物品...")
+end
+
+function storeItems()
+  -- 存放物品代码
+  print("存放物品...")
+end
+
+main()`;
+              } else if (scriptName === "多任务模式.lua") {
+                scriptContent = `-- 多任务模式.lua
+-- 这是默认角色玩家脚本
+-- 功能：执行多个任务
+function main()
+  -- 初始化任务列表
+  local tasks = initTasks()
+  -- 执行任务
+  executeTasks(tasks)
+  return 0
+end
+
+function initTasks()
+  -- 初始化任务列表
+  print("初始化任务...")
+  return {"任务1", "任务2", "任务3"}
+end
+
+function executeTasks(tasks)
+  -- 执行任务
+  for i, task in ipairs(tasks) do
+    print("执行任务: " .. task)
+  end
+end
+
+main()`;
+              } else if (scriptName === "琥珀实战任务.lua") {
+                scriptContent = `-- 琥珀实战任务.lua
+-- 这是特殊角色门派脚本
+-- 功能：完成琥珀实战任务
+function main()
+  -- 接取任务
+  acceptQuest()
+  -- 寻找目标
+  findTarget()
+  -- 战斗
+  battle()
+  -- 完成任务
+  completeQuest()
+  return 0
+end
+
+function acceptQuest()
+  -- 接取任务代码
+  print("接取琥珀实战任务...")
+end
+
+function findTarget()
+  -- 寻找目标代码
+  print("寻找目标...")
+end
+
+function battle()
+  -- 战斗代码
+  print("开始战斗...")
+end
+
+function completeQuest()
+  -- 完成任务代码
+  print("完成琥珀实战任务...")
+end
+
+main()`;
+              } else if (scriptName === "开拍实行任务.lua") {
+                scriptContent = `-- 开拍实行任务.lua
+-- 这是特殊角色玩家脚本
+-- 功能：执行开拍任务
+function main()
+  -- 准备拍卖物品
+  prepareItems()
+  -- 设置价格
+  setPrices()
+  -- 发布拍卖
+  publishAuction()
+  -- 监控拍卖
+  monitorAuction()
+  return 0
+end
+
+function prepareItems()
+  -- 准备拍卖物品代码
+  print("准备拍卖物品...")
+end
+
+function setPrices()
+  -- 设置价格代码
+  print("设置价格...")
+end
+
+function publishAuction()
+  -- 发布拍卖代码
+  print("发布拍卖...")
+end
+
+function monitorAuction()
+  -- 监控拍卖代码
+  print("监控拍卖...")
+end
+
+main()`;
+              }
+
+              // 设置脚本内容
+              currentScriptContent.value = scriptContent;
+
+              // 模拟点击脚本树中的对应节点，确保UI状态一致
+              handleScriptFileSelect(scriptName);
+
+              // 激活脚本树面板
+              if (activeTabKey && typeof activeTabKey.value !== "undefined") {
+                activeTabKey.value = "1"; // 假设脚本树在第一个标签页
+              }
+
+              message.success(
+                `已定位到${defaultRole.value}/${defaultRole2.value}对应的脚本: ${scriptName}`
+              );
+            });
           };
 
           const scriptFileInput = ref(null);
@@ -1789,6 +2004,179 @@
           };
 
           const selectedScriptKeys = ref([]);
+
+          // 处理脚本文件选择函数
+          const handleScriptFileSelect = (value) => {
+            // 更新选中的文件名
+            selectedFileName.value = value;
+            selectedScriptFile.value = value;
+
+            // 在脚本树中找到对应的节点并模拟选中
+            const scriptNodes = scriptTreeData.value.reduce((acc, folder) => {
+              if (folder.children) {
+                return [...acc, ...folder.children];
+              }
+              return acc;
+            }, []);
+
+            const targetScript = scriptNodes.find(
+              (node) => node.title === value
+            );
+            if (targetScript) {
+              selectedScriptKeys.value = [targetScript.key];
+
+              // 根据脚本名称设置不同的脚本内容
+              let scriptContent = "";
+              if (value === "存仓.lua") {
+                scriptContent = `-- 存仓.lua
+-- 这是默认角色门派脚本
+-- 功能：自动存仓功能
+function main()
+  -- 打开仓库界面
+  openRepository()
+  -- 循环检查物品
+  checkItems()
+  -- 存放物品
+  storeItems()
+  return 0
+end
+
+function openRepository()
+  -- 打开仓库代码
+  print("打开仓库...")
+end
+
+function checkItems()
+  -- 检查物品代码
+  print("检查物品...")
+end
+
+function storeItems()
+  -- 存放物品代码
+  print("存放物品...")
+end
+
+main()`;
+              } else if (value === "多任务模式.lua") {
+                scriptContent = `-- 多任务模式.lua
+-- 这是默认角色玩家脚本
+-- 功能：执行多个任务
+function main()
+  -- 初始化任务列表
+  local tasks = initTasks()
+  -- 执行任务
+  executeTasks(tasks)
+  return 0
+end
+
+function initTasks()
+  -- 初始化任务列表
+  print("初始化任务...")
+  return {"任务1", "任务2", "任务3"}
+end
+
+function executeTasks(tasks)
+  -- 执行任务
+  for i, task in ipairs(tasks) do
+    print("执行任务: " .. task)
+  end
+end
+
+main()`;
+              } else if (value === "琥珀实战任务.lua") {
+                scriptContent = `-- 琥珀实战任务.lua
+-- 这是特殊角色门派脚本
+-- 功能：完成琥珀实战任务
+function main()
+  -- 接取任务
+  acceptQuest()
+  -- 寻找目标
+  findTarget()
+  -- 战斗
+  battle()
+  -- 完成任务
+  completeQuest()
+  return 0
+end
+
+function acceptQuest()
+  -- 接取任务代码
+  print("接取琥珀实战任务...")
+end
+
+function findTarget()
+  -- 寻找目标代码
+  print("寻找目标...")
+end
+
+function battle()
+  -- 战斗代码
+  print("开始战斗...")
+end
+
+function completeQuest()
+  -- 完成任务代码
+  print("完成琥珀实战任务...")
+end
+
+main()`;
+              } else if (value === "开拍实行任务.lua") {
+                scriptContent = `-- 开拍实行任务.lua
+-- 这是特殊角色玩家脚本
+-- 功能：执行开拍任务
+function main()
+  -- 准备拍卖物品
+  prepareItems()
+  -- 设置价格
+  setPrices()
+  -- 发布拍卖
+  publishAuction()
+  -- 监控拍卖
+  monitorAuction()
+  return 0
+end
+
+function prepareItems()
+  -- 准备拍卖物品代码
+  print("准备拍卖物品...")
+end
+
+function setPrices()
+  -- 设置价格代码
+  print("设置价格...")
+end
+
+function publishAuction()
+  -- 发布拍卖代码
+  print("发布拍卖...")
+end
+
+function monitorAuction()
+  -- 监控拍卖代码
+  print("监控拍卖...")
+end
+
+main()`;
+              } else {
+                // 默认脚本内容
+                scriptContent = `-- ${value}
+-- 这是新的脚本内容
+
+-- 在这里编写脚本代码
+function main()
+  print("Hello World!")
+  return 0
+end
+
+main()`;
+              }
+
+              // 设置当前脚本内容
+              currentScriptContent.value = scriptContent;
+            }
+
+            message.success(`已选择脚本: ${value}`);
+          };
 
           const handleScriptSelect = (selectedKeys, info) => {
             console.log("选中的节点信息:", info.node);
@@ -2448,10 +2836,7 @@
 
           const selectedScriptFile = ref("");
 
-          const handleScriptFileSelect = (value) => {
-            selectedFileName.value = value;
-            message.success(`已选择脚本: ${value}`);
-          };
+          // handleScriptFileSelect 已经在前面定义过了，不需要重复定义
 
           // 返回模板需要使用的数据和方法
           return {
@@ -2545,7 +2930,7 @@
             selectedScriptFile,
             handleScriptFileSelect,
             tableData,
-         
+            user,
           };
         },
       });
@@ -2569,8 +2954,6 @@
       app.use(ElementPlus);
 
       app.mount("#app");
-   
-
     </script>
   </body>
 </html>
