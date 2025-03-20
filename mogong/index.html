@@ -1012,7 +1012,9 @@
                     />
                   </a-form-item>
                   <a-form-item>
-                    <a-button type="primary" @click="handleAdd">添加</a-button>
+                    <a-button type="primary" @click="handleAddTableRow"
+                      >添加</a-button
+                    >
                   </a-form-item>
 
                   <div style="flex: 1"></div>
@@ -2838,6 +2840,35 @@ main()`;
 
           // handleScriptFileSelect 已经在前面定义过了，不需要重复定义
 
+          // 添加新的处理表格数据添加的方法
+          const handleAddTableRow = () => {
+            if (!username.value || !defaultRole.value || !defaultRole2.value) {
+              message.warning("请填写完整信息");
+              return;
+            }
+
+            // 生成新的表格数据
+            const newRow = {
+              date: dayjs().format("YYYY-MM-DD"),
+              name: username.value,
+              city: defaultRole.value,
+              state: defaultRole2.value,
+              address: `${defaultRole.value}/${defaultRole2.value}`,
+              phone: password.value || "未设置",
+              notes: "新添加的数据",
+            };
+
+            // 添加到表格数据中
+            tableData.value = [...tableData.value, newRow];
+
+            // 清空输入框
+            username.value = "";
+            password.value = "";
+
+            // 提示成功
+            message.success("添加成功");
+          };
+
           // 返回模板需要使用的数据和方法
           return {
             activeTab,
@@ -2931,6 +2962,7 @@ main()`;
             handleScriptFileSelect,
             tableData,
             user,
+            handleAddTableRow,
           };
         },
       });

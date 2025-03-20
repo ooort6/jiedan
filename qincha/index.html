@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>加密货币实时K线</title>
+    <!-- 引入Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- 引入Element Plus -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-plus/dist/index.css"
+    />
+    <script src="https://unpkg.com/element-plus"></script>
+    <!-- 引入Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- 引入Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 10px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: #1a1a1a;
+        color: #fff;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 15px;
+      }
+      .header h1 {
+        margin: 0;
+        color: #fff;
+        font-size: 24px;
+      }
+      .time-range {
+        margin: 15px 0;
+        text-align: center;
+      }
+      .charts-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+      .chart-wrapper {
+        background: #2a2a2a;
+        border-radius: 8px;
+        padding: 12px;
+        height: 300px;
+        position: relative;
+      }
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .chart-title {
+        margin: 0;
+        font-size: 16px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .price-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+      }
+      .current-price {
+        font-weight: bold;
+      }
+      .price-change {
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+      .price-change.positive {
+        background: rgba(16, 185, 129, 0.2);
+        color: rgb(16, 185, 129);
+      }
+      .price-change.negative {
+        background: rgba(239, 68, 68, 0.2);
+        color: rgb(239, 68, 68);
+      }
+      .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+      .error-message {
+        color: #ff4d4f;
+        font-size: 12px;
+        margin-left: 8px;
+      }
+      @media (max-width: 768px) {
+        body {
+          padding: 5px;
+        }
+        .header h1 {
+          font-size: 20px;
+        }
+        .charts-container {
+          grid-template-columns: 1fr;
+        }
+        .chart-wrapper {
+          height: 250px;
+        }
+        .chart-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+        .price-info {
+          width: 100%;
+          justify-content: space-between;
+        }
+        .el-radio-button__inner {
+          padding: 8px 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="container">
+      <div class="header">
+        <h1>加密货币实时K线</h1>
+      </div>
+
+      <div class="time-range">
+        <el-radio-group
+          v-model="timeRange"
+          @change="handleTimeRangeChange"
+          size="small"
+        >
+          <el-radio-button label="1">24小时</el-radio-button>
+          <el-radio-button label="7">7天</el-radio-button>
+          <el-radio-button label="30">30天</el-radio-button>
+        </el-radio-group>
+      </div>
+
+      <div class="charts-container">
+        <div
+          v-for="coin in specificCoins"
+          :key="coin.symbol"
+          class="chart-wrapper"
+        >
+          <div class="chart-header">
+            <h3 class="chart-title">
+              {{ coin.name }} ({{ coin.baseAsset }}/USDT)
+              <span v-if="error[coin.symbol]" class="error-message"
+                >获取失败</span
+              >
+            </h3>
+            <div v-if="coinData[coin.symbol]" class="price-info">
+              <span class="current-price"
+                >${{ coinData[coin.symbol].price.toFixed(2) }}</span
+              >
+              <span
+                class="price-change"
+                :class="coinData[coin.symbol].priceChange >= 0 ? 'positive' : 'negative'"
+              >
+                {{ coinData[coin.symbol].priceChange >= 0 ? '+' : '' }}{{
+                coinData[coin.symbol].priceChange.toFixed(2) }}%
+              </span>
+            </div>
+          </div>
+          <div style="position: relative; height: calc(100% - 32px)">
+            <div v-if="loadingCharts[coin.symbol]" class="loading-overlay">
+              <el-loading></el-loading>
+            </div>
+            <canvas :id="'chart-' + coin.symbol"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,192 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background-color: #f7f9fc;
+  color: #333;
+  line-height: 1.6;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background-color: #1f1f1f;
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+main {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.coin-selector {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.coin-selector .el-select {
+  width: 100%;
+}
+
+.coin-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.coin-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.coin-info {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.coin-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.coin-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.coin-title h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.coin-symbol {
+  color: #666;
+  font-size: 1rem;
+}
+
+.coin-price {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.current-price {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.price-change {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.positive {
+  color: #10b981;
+}
+
+.negative {
+  color: #ef4444;
+}
+
+.coin-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.stat-item {
+  flex: 1;
+  min-width: 120px;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.chart-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  height: 400px;
+}
+
+footer {
+  background-color: #1f1f1f;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.875rem;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+  .coin-selector {
+    flex-direction: column;
+  }
+  
+  .coin-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .chart-container {
+    height: 300px;
+  }
+}
+
+/* ElementPlus 暗色主题适配 */
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #1a1a1a;
+  color: #eee;
+}
+
+html.dark .coin-info,
+html.dark .chart-container {
+  background-color: #2c2c2c;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+} 
