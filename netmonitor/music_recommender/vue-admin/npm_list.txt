@@ -1,0 +1,18 @@
+vue-admin@0.0.0 D:\quanzhan\vue-admin
+├── @element-plus/icons-vue@2.3.1
+├── @types/node@22.13.13
+├── @types/nprogress@0.2.3
+├── @vitejs/plugin-vue@5.2.3
+├── @vue/tsconfig@0.7.0
+├── axios@1.8.4
+├── element-plus@2.9.7
+├── nprogress@0.2.0
+├── pinia@3.0.1
+├── typescript@5.7.3
+├── unplugin-auto-import@19.1.1
+├── unplugin-vue-components@28.4.1
+├── vite@6.2.3
+├── vue-router@4.5.0
+├── vue-tsc@2.2.8
+└── vue@3.5.13
+
