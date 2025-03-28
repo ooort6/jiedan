@@ -130,8 +130,20 @@ def logout(current_user):
 @token_required
 def get_user_info(current_user):
     """获取当前登录用户信息"""
-    return jsonify({
-        'code': 200,
-        'message': '获取用户信息成功',
-        'data': current_user.to_dict()
-    }), 200 
+    try:
+        if current_user is None:
+            return jsonify({
+                'code': 401,
+                'message': '用户未登录或登录已过期'
+            }), 401
+        return jsonify({
+            'code': 200,
+            'message': '获取用户信息成功',
+            'data': current_user.to_dict()
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'code': 500,
+            'message': '获取用户信息失败',
+            'error': str(e)
+        }), 500 

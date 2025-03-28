@@ -14,19 +14,22 @@ export interface Album {
 // 歌曲信息
 export interface Song {
   id: number;
-  name: string;
-  artists: Artist[];
-  album: Album;
+  title: string;
+  artist: string;
+  album: string;
   duration: number;
+  cover_url: string;
+  source_url: string;
 }
 
 // 歌单信息
 export interface Playlist {
   id: number;
   name: string;
-  coverImgUrl: string;
-  trackCount: number;
-  tracks?: Track[];
+  description: string;
+  cover_url: string;
+  created_at: string;
+  song_count: number;
 }
 
 // 歌单中的歌曲信息
@@ -47,16 +50,20 @@ export interface MusicUrl {
 
 // API响应类型
 export interface SearchResponse {
-  result: {
-    songs?: Song[];
-    playlists?: Playlist[];
-  };
-  code: number;
+  songs: Song[];
+}
+
+export interface PlaylistResponse {
+  playlists: Playlist[];
 }
 
 export interface PlaylistDetailResponse {
-  playlist: Playlist;
-  code: number;
+  id: number;
+  name: string;
+  description: string;
+  cover_url: string;
+  created_at: string;
+  songs: Song[];
 }
 
 export interface MusicUrlResponse {
