@@ -24,6 +24,14 @@ interface RegisterParams {
   password: string;
 }
 
+interface ApiResponse<T = any> {
+  code: number;
+  message: string;
+  token?: string;
+  user?: UserInfo;
+  data?: T;
+}
+
 export const useUserStore = defineStore("user", {
   state: (): UserState => ({
     token: localStorage.getItem("token") || "",
@@ -40,11 +48,15 @@ export const useUserStore = defineStore("user", {
     // 登录
     async loginAction(username: string, password: string) {
       try {
-        const res = await login({ username, password });
-        if (res.data && res.data.token) {
-          this.token = res.data.token;
-          localStorage.setItem("token", res.data.token);
-
+        const res = (await login({ username, password })) as ApiResponse;
+        if (res.code === 200 && res.token) {
+          this.token = res.token;
+          localStorage.setItem("token", res.token);
+          if (res.user) {
+            this.username = res.user.username;
+            this.nickname = res.user.username;
+            this.avatar = res.user.avatar || "";
+          }
           ElMessage.success(res.message || "登录成功");
           router.push("/");
           return true;
