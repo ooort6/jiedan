@@ -22,7 +22,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 
 const route = useRoute();
 const router = useRouter();

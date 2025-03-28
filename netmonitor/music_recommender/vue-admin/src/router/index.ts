@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import { ChatDotRound } from "@element-plus/icons-vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -64,6 +63,12 @@ const routes: Array<RouteRecordRaw> = [
         name: "Todo",
         component: () => import("@/views/todo/index.vue"),
         meta: { title: "待办事项", icon: "List", requiresAuth: true },
+      },
+      {
+        path: "music",
+        name: "Music",
+        component: () => import("@/views/music/index.vue"),
+        meta: { title: "网易云音乐", icon: "Headset", requiresAuth: true },
       },
     ],
   },
